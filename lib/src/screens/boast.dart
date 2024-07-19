@@ -23,7 +23,7 @@ class Boast extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.white,
           centerTitle: true,
-          title: Text('PetStory', style: TextStyle(fontFamily: 'MainFont')),
+          title: Text('Pet Story', style: TextStyle(fontFamily: 'MainFont')),
           bottom: TabBar(
             tabs: tabs,
             indicatorColor: Color(0xffFF4081),
