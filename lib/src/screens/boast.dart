@@ -8,7 +8,7 @@ class Boast extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('PetStory'),
+        title: Text('PetStory', style: TextStyle(fontFamily: 'MainFont')),
       ),
     );
   }
