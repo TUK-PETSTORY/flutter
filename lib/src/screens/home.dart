@@ -38,6 +38,7 @@ class _HomeState extends State<Home> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         backgroundColor: Colors.white,
+        selectedItemColor: Color(0xffFF4081),
       ),
     );
   }
