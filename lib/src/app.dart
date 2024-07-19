@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'screens/intro.dart';
 import 'screens/home.dart';
+import 'screens/boast.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      theme: ThemeData(scaffoldBackgroundColor: Colors.white),
       debugShowCheckedModeBanner: false,
       // theme 추가
       // route 추가
