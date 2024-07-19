@@ -7,6 +7,7 @@ class Intro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffFFEEEE),
       body: Column(
         children: [
           // 로고 & 슬로건 영역
