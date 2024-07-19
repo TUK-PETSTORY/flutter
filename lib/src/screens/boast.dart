@@ -34,9 +34,3 @@ class Boast extends StatelessWidget {
     );
   }
 }
-
-void main() {
-  runApp(MaterialApp(
-    home: Boast(),
-  ));
-}
