@@ -21,10 +21,16 @@ class Boast extends StatelessWidget {
       length: tabs.length,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           centerTitle: true,
           title: Text('PetStory', style: TextStyle(fontFamily: 'MainFont')),
           bottom: TabBar(
             tabs: tabs,
+            indicatorColor: Color(0xffFF4081),
+            labelColor: Colors.black,
+            overlayColor: MaterialStatePropertyAll(
+              Color(0xffFFEEEE),
+            ),
           ),
         ),
         body: TabBarView(
