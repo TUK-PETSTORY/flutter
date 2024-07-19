@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import './mainpages/childBoast.dart';
+import '../feed/feed_listitem.dart';
 
 final List<Tab> tabs = <Tab>[
   Tab(child: Text('자식자랑', style: TextStyle(fontFamily: 'MainFont'))),
@@ -7,7 +9,7 @@ final List<Tab> tabs = <Tab>[
 ];
 
 final List<Widget> tabItems = [
-  Center(child: Text('자식자랑', style: TextStyle(fontFamily: 'MainFont'))),
+  Childboast(),
   Center(child: Text('육아꿀팁', style: TextStyle(fontFamily: 'MainFont'))),
   Center(child: Text('입양', style: TextStyle(fontFamily: 'MainFont'))),
 ];
