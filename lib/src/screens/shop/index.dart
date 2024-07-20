@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/src/screens/shop/show.dart';
 
 final List<Tab> tabs = <Tab>[
   Tab(child: Text('전체보기', style: TextStyle(fontFamily: 'MainFont'))),
@@ -6,12 +7,12 @@ final List<Tab> tabs = <Tab>[
 ];
 
 final List<Widget> tabItems = [
-  Center(child: Text('전체보기', style: TextStyle(fontFamily: 'MainFont'))),
+  ShopListItem(),
   Center(child: Text('즐겨찾기', style: TextStyle(fontFamily: 'MainFont')))
 ];
 
-class Shop extends StatelessWidget {
-  const Shop({super.key});
+class ShopIndex extends StatelessWidget {
+  const ShopIndex({super.key});
 
   @override
   Widget build(BuildContext context) {
