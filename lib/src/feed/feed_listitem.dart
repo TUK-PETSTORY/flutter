@@ -6,6 +6,8 @@ class FeedListItem extends StatefulWidget {
 }
 
 class _FeedListItemState extends State<FeedListItem> {
+  bool isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -84,12 +86,37 @@ class _FeedListItemState extends State<FeedListItem> {
                       color: Colors.black87),
                 ),
                 SizedBox(height: 4), //요소 사이 간격
-                Text(
-                  //내용
-                  ' 흰둥이가 밥 먹고 낮잠을 자고있어요. 밥을 좀 많이 줬다고 생각했는데 다 먹고 자네요. 배가 동글동글한거 보니까 만족스러운 식사였나봐요.',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'MainFont',
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isExpanded = !isExpanded;
+                    });
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        //내용
+                        ' 흰둥이가 밥 먹고 낮잠을 자고있어요. 밥을 좀 많이 줬다고 생각했는데 다 먹고 자네요. 배가 동글동글한거 보니까 만족스러운 식사였나봐요.',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'MainFont',
+                        ),
+                        maxLines: isExpanded ? null : 2,
+                        overflow: isExpanded
+                            ? TextOverflow.visible
+                            : TextOverflow.ellipsis,
+                      ),
+                      if (!isExpanded)
+                        Text(
+                          '더보기',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontFamily: 'MainFont',
+                          ),
+                        ),
+                    ],
                   ),
                 ),
                 SizedBox(height: 4), //요소 사이 간격
