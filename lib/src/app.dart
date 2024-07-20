@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import 'screens/intro.dart';
 import 'screens/home.dart';
-import 'screens/boast.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
