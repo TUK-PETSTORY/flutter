@@ -108,7 +108,12 @@ class _FeedListItemState extends State<FeedListItem> {
                       children: [
                         Icon(Icons.thumb_up_off_alt),
                         SizedBox(width: 4), //요소사이 간격
-                        Text('12')
+                        Text(
+                          '12',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
                       ],
                     ),
                   ],
