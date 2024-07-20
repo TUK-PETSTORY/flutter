@@ -30,6 +30,7 @@ class Boast extends StatelessWidget {
             tabs: tabs,
             indicatorColor: Color(0xffFF4081),
             labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey,
             overlayColor: MaterialStatePropertyAll(
               Color(0xffFFEEEE),
             ),
