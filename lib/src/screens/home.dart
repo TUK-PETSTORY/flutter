@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'comunityMain.dart';
+import 'shop/index.dart';
 
 final List<BottomNavigationBarItem> navbar = [
   BottomNavigationBarItem(icon: Icon(Icons.web), label: '추천사이트'),
@@ -18,7 +19,7 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 1;
 
   final List<Widget> _navbarViews = [
-    Center(child: Text('추천사이트', style: TextStyle(fontFamily: 'MainFont'))),
+    ShopIndex(),
     Comunitymain(),
     Center(child: Text('마이페이지', style: TextStyle(fontFamily: 'MainFont'))),
   ];
