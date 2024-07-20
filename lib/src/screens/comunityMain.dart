@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './mainpages/childBoast.dart';
+import 'comunity/childBoast.dart';
 import '../feed/feed_listitem.dart';
 
 final List<Tab> tabs = <Tab>[
@@ -14,8 +14,8 @@ final List<Widget> tabItems = [
   Center(child: Text('입양', style: TextStyle(fontFamily: 'MainFont'))),
 ];
 
-class Boast extends StatelessWidget {
-  const Boast({super.key});
+class Comunitymain extends StatelessWidget {
+  const Comunitymain({super.key});
 
   @override
   Widget build(BuildContext context) {
