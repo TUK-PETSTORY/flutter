@@ -12,6 +12,11 @@ class _PostEditState extends State<PostEdit> {
   String _title = '';
   String _content = '';
 
+  final TextStyle _textStyle = TextStyle(
+    color: Color(0xFF828282),
+    fontFamily: 'MainFont',
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,8 +174,7 @@ class _PostEditState extends State<PostEdit> {
             TextFormField(
               decoration: InputDecoration(
                 hintText: '자식의 이름을 입력해주세요.',
-                hintStyle:
-                    TextStyle(color: Color(0xFF828282), fontFamily: 'MainFont'),
+                hintStyle: _textStyle,
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                 border: UnderlineInputBorder(
@@ -183,6 +187,7 @@ class _PostEditState extends State<PostEdit> {
                   borderSide: BorderSide(color: Color(0xFFB0B0B0)),
                 ),
               ),
+              style: _textStyle, // 입력 텍스트에 동일한 폰트 적용
               onChanged: (value) {
                 setState(() {
                   _childName = value;
@@ -192,8 +197,7 @@ class _PostEditState extends State<PostEdit> {
             TextFormField(
               decoration: InputDecoration(
                 hintText: '자식의 나이를 입력해주세요',
-                hintStyle:
-                    TextStyle(color: Color(0xFF828282), fontFamily: 'MainFont'),
+                hintStyle: _textStyle,
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                 border: UnderlineInputBorder(
@@ -207,6 +211,7 @@ class _PostEditState extends State<PostEdit> {
                 ),
               ),
               keyboardType: TextInputType.number,
+              style: _textStyle, // 입력 텍스트에 동일한 폰트 적용
               onChanged: (value) {
                 setState(() {
                   _childAge = value;
@@ -217,9 +222,7 @@ class _PostEditState extends State<PostEdit> {
             TextFormField(
               decoration: InputDecoration(
                 hintText: '제목을 입력하세요.',
-                hintStyle: TextStyle(
-                  color: Color(0xFF828282),
-                  fontFamily: 'MainFont',
+                hintStyle: _textStyle.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),
@@ -227,6 +230,7 @@ class _PostEditState extends State<PostEdit> {
                     EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                 border: InputBorder.none,
               ),
+              style: _textStyle, // 입력 텍스트에 동일한 폰트 적용
               onChanged: (value) {
                 setState(() {
                   _title = value;
@@ -238,10 +242,7 @@ class _PostEditState extends State<PostEdit> {
               maxLines: null,
               decoration: InputDecoration(
                 hintText: '내용을 입력하세요.',
-                hintStyle: TextStyle(
-                  color: Color(0xFF828282),
-                  fontFamily: 'MainFont',
-                ),
+                hintStyle: _textStyle,
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                 border: UnderlineInputBorder(
@@ -254,6 +255,7 @@ class _PostEditState extends State<PostEdit> {
                   borderSide: BorderSide(color: Color(0xFFB0B0B0)),
                 ),
               ),
+              style: _textStyle, // 입력 텍스트에 동일한 폰트 적용
               onChanged: (value) {
                 setState(() {
                   _content = value;
