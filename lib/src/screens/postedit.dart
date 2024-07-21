@@ -17,6 +17,13 @@ class _PostEditState extends State<PostEdit> {
     fontFamily: 'MainFont',
   );
 
+  final TextStyle _titleTextStyle = TextStyle(
+    color: Color(0xFF828282),
+    fontFamily: 'MainFont',
+    fontWeight: FontWeight.bold,
+    fontSize: 20,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -222,15 +229,12 @@ class _PostEditState extends State<PostEdit> {
             TextFormField(
               decoration: InputDecoration(
                 hintText: '제목을 입력하세요.',
-                hintStyle: _textStyle.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
+                hintStyle: _titleTextStyle, // 힌트 텍스트와 입력 텍스트에 동일한 스타일 적용
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                 border: InputBorder.none,
               ),
-              style: _textStyle, // 입력 텍스트에 동일한 폰트 적용
+              style: _titleTextStyle, // 입력 텍스트에 동일한 폰트 적용
               onChanged: (value) {
                 setState(() {
                   _title = value;
