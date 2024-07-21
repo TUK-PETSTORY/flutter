@@ -7,8 +7,8 @@ final List<Tab> tabs = <Tab>[
 ];
 
 final List<Widget> tabItems = [
-  ShopListItem(),
-  Center(child: Text('즐겨찾기', style: TextStyle(fontFamily: 'MainFont')))
+  ShopShow(),
+  ShopShow(),
 ];
 
 class ShopIndex extends StatelessWidget {

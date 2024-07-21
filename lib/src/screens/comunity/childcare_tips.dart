@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../feed/feed_listitem.dart';
+import '../../../widgets/listitems/feed_list_item.dart';
 
 class ChildcareTips extends StatefulWidget {
   @override
