@@ -81,7 +81,7 @@ class _PostEditState extends State<PostEdit> {
     );
   }
 
-  Widget _buildTextFormField({
+  Widget _buildTextFormFieldWithTopBorder({
     required String hintText,
     required ValueChanged<String> onChanged,
     TextInputType keyboardType = TextInputType.text,
@@ -90,7 +90,42 @@ class _PostEditState extends State<PostEdit> {
     int minLines = 1,
     int maxLines = 1,
     EdgeInsetsGeometry contentPadding =
-        const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+        const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Color(0xFFB0B0B0), width: 1.0), // 상단 보더 추가
+        ),
+      ),
+      child: TextFormField(
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: style,
+          contentPadding: contentPadding,
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none, // 기본 보더 제거
+          focusedBorder: InputBorder.none, // 포커스 시 보더 제거
+        ),
+        style: style,
+        onChanged: onChanged,
+        keyboardType: keyboardType,
+        minLines: minLines,
+        maxLines: maxLines,
+      ),
+    );
+  }
+
+  Widget _buildTextFormFieldWithoutTopBorder({
+    required String hintText,
+    required ValueChanged<String> onChanged,
+    TextInputType keyboardType = TextInputType.text,
+    TextStyle? style,
+    bool isTitle = false,
+    int minLines = 1,
+    int maxLines = 1,
+    EdgeInsetsGeometry contentPadding =
+        const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
   }) {
     return TextFormField(
       decoration: InputDecoration(
@@ -100,16 +135,12 @@ class _PostEditState extends State<PostEdit> {
         border: UnderlineInputBorder(
           borderSide: BorderSide(color: Color(0xFFB0B0B0)),
         ),
-        focusedBorder: isTitle
-            ? InputBorder.none
-            : UnderlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-              ),
-        enabledBorder: isTitle
-            ? InputBorder.none
-            : UnderlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-              ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFB0B0B0)),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFB0B0B0)),
+        ),
       ),
       style: style,
       onChanged: onChanged,
@@ -152,7 +183,7 @@ class _PostEditState extends State<PostEdit> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Divider(color: Color(0xFFB0B0B0)),
-            SizedBox(height: 16), // 앱바와 버튼 사이의 여백
+            SizedBox(height: 8), // 앱바와 버튼 사이의 여백
 
             Column(
               children: [
@@ -164,32 +195,34 @@ class _PostEditState extends State<PostEdit> {
                   ],
                 ),
                 SizedBox(height: 16),
-                Divider(color: Color(0xFFB0B0B0)),
               ],
             ),
 
-            _buildTextFormField(
+            // 자식의 이름을 입력해달라는 필드
+            _buildTextFormFieldWithTopBorder(
               hintText: '자식의 이름을 입력해주세요.',
               onChanged: (value) => setState(() => _childName = value),
               style: _textStyle,
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
             ),
-            _buildTextFormField(
+
+            // 자식의 나이를 입력해달라는 필드
+            _buildTextFormFieldWithTopBorder(
               hintText: '자식의 나이를 입력해주세요',
               onChanged: (value) => setState(() => _childAge = value),
               keyboardType: TextInputType.number,
               style: _textStyle,
             ),
-            _buildTextFormField(
+
+            // 제목을 입력하세요 필드
+            _buildTextFormFieldWithTopBorder(
               hintText: '제목을 입력하세요.',
               onChanged: (value) => setState(() => _title = value),
               style: _titleTextStyle,
               isTitle: true,
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
             ),
-            _buildTextFormField(
+
+            // 내용을 입력하세요 필드 (위쪽 보더 없음)
+            _buildTextFormFieldWithoutTopBorder(
               hintText: '내용을 입력하세요.',
               onChanged: (value) => setState(() => _content = value),
               style: _textStyle,
