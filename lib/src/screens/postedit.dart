@@ -1,4 +1,7 @@
+import 'dart:io'; // File을 사용하기 위해 import
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart'; // 권한 처리를 위한 패키지
 
 class PostEdit extends StatefulWidget {
   @override
@@ -11,6 +14,9 @@ class _PostEditState extends State<PostEdit> {
   String _childAge = '';
   String _title = '';
   String _content = '';
+  final List<File> _images = []; // 선택된 이미지 파일 리스트
+
+  final ImagePicker _picker = ImagePicker(); // 이미지 피커 인스턴스
 
   final TextStyle _textStyle = TextStyle(
     color: Color(0xFF828282),
@@ -23,6 +29,89 @@ class _PostEditState extends State<PostEdit> {
     fontWeight: FontWeight.bold,
     fontSize: 20,
   );
+
+  Future<void> _pickImages() async {
+    final status = await Permission.photos.request();
+    if (status.isGranted) {
+      final List<XFile>? pickedFiles = await _picker.pickMultiImage();
+      if (pickedFiles != null) {
+        setState(() {
+          _images.addAll(pickedFiles.map((file) => File(file.path)));
+        });
+      }
+    } else {
+      print('권한이 필요합니다.');
+    }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      _images.removeAt(index);
+    });
+  }
+
+  Widget _buildCategoryButton(String category) {
+    return SizedBox(
+      width: 100,
+      child: TextButton(
+        onPressed: () {
+          setState(() {
+            _selectedCategory = category;
+          });
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color?>((state) =>
+              _selectedCategory == category ? Color(0xFFFF4081) : Colors.white),
+          foregroundColor: MaterialStateProperty.resolveWith<Color?>((state) =>
+              _selectedCategory == category ? Colors.white : Color(0xFF828282)),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+              EdgeInsets.symmetric(vertical: 8.0)),
+          overlayColor:
+              MaterialStateProperty.resolveWith((state) => Color(0xFFFF4081)),
+          side: MaterialStateProperty.resolveWith<BorderSide>((state) {
+            return BorderSide(
+              color: Color(0xFFB0B0B0),
+              width: 1.0,
+            );
+          }),
+        ),
+        child: Text(category,
+            style: TextStyle(fontSize: 16, fontFamily: 'MainFont')),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required String hintText,
+    required ValueChanged<String> onChanged,
+    TextInputType keyboardType = TextInputType.text,
+    TextStyle? style,
+    bool isTitle = false,
+    int minLines = 1,
+    int maxLines = 1,
+  }) {
+    return TextFormField(
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: style,
+        contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+        border: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFB0B0B0)),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFB0B0B0)),
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFB0B0B0)),
+        ),
+      ),
+      style: style,
+      onChanged: onChanged,
+      keyboardType: keyboardType,
+      minLines: minLines,
+      maxLines: maxLines,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +126,9 @@ class _PostEditState extends State<PostEdit> {
         ),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              // 완료 버튼 클릭 시 처리
+            },
             child: Text(
               '완료',
               style: TextStyle(fontFamily: 'MainFont', color: Colors.black),
@@ -54,10 +145,7 @@ class _PostEditState extends State<PostEdit> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              color: Color(0xFFB0B0B0), // 선의 색상
-              height: 1.0, // 선의 두께
-            ),
+            Divider(color: Color(0xFFB0B0B0)),
             SizedBox(height: 16), // 앱바와 버튼 사이의 여백
 
             Column(
@@ -65,209 +153,41 @@ class _PostEditState extends State<PostEdit> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    SizedBox(
-                      width: 100,
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _selectedCategory = '자식 자랑';
-                          });
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color?>(
-                                  (state) {
-                            if (state.contains(MaterialState.pressed)) {
-                              return Color(0xFFFF4081);
-                            }
-                            return _selectedCategory == '자식 자랑'
-                                ? Color(0xFFFF4081)
-                                : Colors.white;
-                          }),
-                          foregroundColor:
-                              MaterialStateProperty.resolveWith<Color?>(
-                                  (state) {
-                            if (state.contains(MaterialState.hovered)) {
-                              return Colors.white;
-                            }
-                            return _selectedCategory == '자식 자랑'
-                                ? Colors.white
-                                : Color(0xFF828282);
-                          }),
-                          padding:
-                              MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                  EdgeInsets.symmetric(vertical: 8.0)),
-                          overlayColor:
-                              MaterialStateProperty.resolveWith((state) {
-                            return Color(0xFFFF4081);
-                          }),
-                          side: MaterialStateProperty.resolveWith<BorderSide>(
-                              (state) {
-                            return BorderSide(
-                              color: Color(0xFFB0B0B0),
-                              width: 1.0,
-                            );
-                          }),
-                        ),
-                        child: Text(
-                          '자식 자랑',
-                          style:
-                              TextStyle(fontSize: 16, fontFamily: 'MainFont'),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    SizedBox(
-                      width: 100,
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _selectedCategory = '육아 꿀팁';
-                          });
-                        },
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.resolveWith<Color?>(
-                                  (state) {
-                            if (state.contains(MaterialState.pressed)) {
-                              return Color(0xFFFF4081);
-                            }
-                            return _selectedCategory == '육아 꿀팁'
-                                ? Color(0xFFFF4081)
-                                : Colors.white;
-                          }),
-                          foregroundColor:
-                              MaterialStateProperty.resolveWith<Color?>(
-                                  (state) {
-                            if (state.contains(MaterialState.hovered)) {
-                              return Colors.white;
-                            }
-                            return _selectedCategory == '육아 꿀팁'
-                                ? Colors.white
-                                : Color(0xFF828282);
-                          }),
-                          padding:
-                              MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                  EdgeInsets.symmetric(vertical: 8.0)),
-                          overlayColor:
-                              MaterialStateProperty.resolveWith((state) {
-                            return Color(0xFFFF4081);
-                          }),
-                          side: MaterialStateProperty.resolveWith<BorderSide>(
-                              (state) {
-                            return BorderSide(
-                              color: Color(0xFFB0B0B0),
-                              width: 1.0,
-                            );
-                          }),
-                        ),
-                        child: Text(
-                          '육아 꿀팁',
-                          style:
-                              TextStyle(fontSize: 16, fontFamily: 'MainFont'),
-                        ),
-                      ),
-                    ),
+                    _buildCategoryButton('자식 자랑'),
+                    _buildCategoryButton('육아 꿀팁'),
                   ],
                 ),
                 SizedBox(height: 16),
-                Container(
-                  color: Color(0xFFB0B0B0),
-                  height: 1.0,
-                ),
+                Divider(color: Color(0xFFB0B0B0)),
               ],
             ),
 
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: '자식의 이름을 입력해주세요.',
-                hintStyle: _textStyle,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-                ),
-              ),
-              style: _textStyle, // 입력 텍스트에 동일한 폰트 적용
-              onChanged: (value) {
-                setState(() {
-                  _childName = value;
-                });
-              },
+            _buildTextFormField(
+              hintText: '자식의 이름을 입력해주세요.',
+              onChanged: (value) => setState(() => _childName = value),
+              style: _textStyle,
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: '자식의 나이를 입력해주세요',
-                hintStyle: _textStyle,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-                ),
-              ),
+            _buildTextFormField(
+              hintText: '자식의 나이를 입력해주세요',
+              onChanged: (value) => setState(() => _childAge = value),
               keyboardType: TextInputType.number,
-              style: _textStyle, // 입력 텍스트에 동일한 폰트 적용
-              onChanged: (value) {
-                setState(() {
-                  _childAge = value;
-                });
-              },
+              style: _textStyle,
             ),
             SizedBox(height: 16),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: '제목을 입력하세요.',
-                hintStyle: _titleTextStyle, // 힌트 텍스트와 입력 텍스트에 동일한 스타일 적용
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                border: InputBorder.none,
-              ),
-              style: _titleTextStyle, // 입력 텍스트에 동일한 폰트 적용
-              onChanged: (value) {
-                setState(() {
-                  _title = value;
-                });
-              },
+            _buildTextFormField(
+              hintText: '제목을 입력하세요.',
+              onChanged: (value) => setState(() => _title = value),
+              style: _titleTextStyle,
+              isTitle: true,
             ),
-            TextFormField(
+            _buildTextFormField(
+              hintText: '내용을 입력하세요.',
+              onChanged: (value) => setState(() => _content = value),
+              style: _textStyle,
               minLines: 8,
-              maxLines: null,
-              decoration: InputDecoration(
-                hintText: '내용을 입력하세요.',
-                hintStyle: _textStyle,
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                border: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-                ),
-              ),
-              style: _textStyle, // 입력 텍스트에 동일한 폰트 적용
-              onChanged: (value) {
-                setState(() {
-                  _content = value;
-                });
-              },
+              maxLines: 1000,
             ),
             SizedBox(height: 16),
-            // 아이콘 버튼과 여백 설정
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -275,15 +195,13 @@ class _PostEditState extends State<PostEdit> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color: Color(0xFFFF4081), // 아이콘 버튼의 배경색
+                      color: Color(0xFFFF4081),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: IconButton(
                       icon: Icon(Icons.add_photo_alternate),
-                      onPressed: () {
-                        // 이미지 추가 동작 구현
-                      },
-                      color: Colors.white, // 아이콘 색상
+                      onPressed: _pickImages,
+                      color: Colors.white,
                       iconSize: 24.0,
                       padding: EdgeInsets.all(12.0),
                       constraints:
@@ -294,6 +212,44 @@ class _PostEditState extends State<PostEdit> {
               ),
             ),
             SizedBox(height: 16),
+            if (_images.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 4.0,
+                    mainAxisSpacing: 4.0,
+                  ),
+                  itemCount: _images.length,
+                  itemBuilder: (context, index) {
+                    final image = _images[index];
+                    return Stack(
+                      children: [
+                        Positioned.fill(
+                          child: Image.file(
+                            image,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: GestureDetector(
+                            onTap: () => _removeImage(index),
+                            child: const Icon(
+                              Icons.cancel_rounded,
+                              color: Colors.black87,
+                              size: 20.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
           ],
         ),
       ),
