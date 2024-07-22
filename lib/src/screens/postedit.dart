@@ -218,7 +218,7 @@ class _PostEditState extends State<PostEdit> {
                 child: GridView.builder(
                   shrinkWrap: true,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+                    crossAxisCount: 1,
                     crossAxisSpacing: 4.0,
                     mainAxisSpacing: 4.0,
                   ),
@@ -228,9 +228,13 @@ class _PostEditState extends State<PostEdit> {
                     return Stack(
                       children: [
                         Positioned.fill(
-                          child: Image.file(
-                            image,
-                            fit: BoxFit.cover,
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            child: Image.file(
+                              image,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         Positioned(
