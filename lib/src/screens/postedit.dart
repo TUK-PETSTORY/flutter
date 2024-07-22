@@ -181,12 +181,12 @@ class _PostEditState extends State<PostEdit> {
               isTitle: true,
             ),
             _buildTextFormField(
-              hintText: '내용을 입력하세요.',
-              onChanged: (value) => setState(() => _content = value),
-              style: _textStyle,
-              minLines: 8,
-              maxLines: 1000,
-            ),
+                hintText: '내용을 입력하세요.',
+                onChanged: (value) => setState(() => _content = value),
+                style: _textStyle,
+                minLines: 8,
+                maxLines: 1000,
+                keyboardType: TextInputType.multiline),
             SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
