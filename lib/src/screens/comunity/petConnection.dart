@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/src/feed/petconnection_list.dart';
+import 'package:front/widgets/listitems/petconnection_list_item.dart';
 
 class Petconnection extends StatefulWidget {
   @override
