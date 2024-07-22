@@ -89,21 +89,27 @@ class _PostEditState extends State<PostEdit> {
     bool isTitle = false,
     int minLines = 1,
     int maxLines = 1,
+    EdgeInsetsGeometry contentPadding =
+        const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
   }) {
     return TextFormField(
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: style,
-        contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+        contentPadding: contentPadding,
         border: UnderlineInputBorder(
           borderSide: BorderSide(color: Color(0xFFB0B0B0)),
         ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFFB0B0B0)),
-        ),
+        focusedBorder: isTitle
+            ? InputBorder.none
+            : UnderlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFFB0B0B0)),
+              ),
+        enabledBorder: isTitle
+            ? InputBorder.none
+            : UnderlineInputBorder(
+                borderSide: BorderSide(color: Color(0xFFB0B0B0)),
+              ),
       ),
       style: style,
       onChanged: onChanged,
@@ -166,6 +172,8 @@ class _PostEditState extends State<PostEdit> {
               hintText: '자식의 이름을 입력해주세요.',
               onChanged: (value) => setState(() => _childName = value),
               style: _textStyle,
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
             ),
             _buildTextFormField(
               hintText: '자식의 나이를 입력해주세요',
@@ -173,20 +181,22 @@ class _PostEditState extends State<PostEdit> {
               keyboardType: TextInputType.number,
               style: _textStyle,
             ),
-            SizedBox(height: 16),
             _buildTextFormField(
               hintText: '제목을 입력하세요.',
               onChanged: (value) => setState(() => _title = value),
               style: _titleTextStyle,
               isTitle: true,
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
             ),
             _buildTextFormField(
-                hintText: '내용을 입력하세요.',
-                onChanged: (value) => setState(() => _content = value),
-                style: _textStyle,
-                minLines: 8,
-                maxLines: 1000,
-                keyboardType: TextInputType.multiline),
+              hintText: '내용을 입력하세요.',
+              onChanged: (value) => setState(() => _content = value),
+              style: _textStyle,
+              minLines: 8,
+              maxLines: 1000,
+              keyboardType: TextInputType.multiline,
+            ),
             SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
