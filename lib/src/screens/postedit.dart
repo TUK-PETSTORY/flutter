@@ -14,9 +14,12 @@ class _PostEditState extends State<PostEdit> {
   String _childAge = '';
   String _title = '';
   String _content = '';
-  final List<File> _images = []; // 선택된 이미지 파일 리스트
 
-  final ImagePicker _picker = ImagePicker(); // 이미지 피커 인스턴스
+  // 선택된 이미지 파일 리스트
+  final List<File> _images = [];
+
+  // 이미지 피커 인스턴스
+  final ImagePicker _picker = ImagePicker();
 
   final TextStyle _textStyle = TextStyle(
     color: Color(0xFF828282),
@@ -30,12 +33,16 @@ class _PostEditState extends State<PostEdit> {
     fontSize: 20,
   );
 
+  // 이미지 선택 기능
   Future<void> _pickImages() async {
+    // 사진 권한 요청
     final status = await Permission.photos.request();
     if (status.isGranted) {
+      // 이미지 선택 다이얼로그 표시
       final List<XFile>? pickedFiles = await _picker.pickMultiImage();
       if (pickedFiles != null) {
         setState(() {
+          // 선택된 이미지를 _images 리스트에 추가
           _images.addAll(pickedFiles.map((file) => File(file.path)));
         });
       }
@@ -44,13 +51,15 @@ class _PostEditState extends State<PostEdit> {
     }
   }
 
+  // 이미지 제거 기능
   void _removeImage(int index) {
     setState(() {
       _images.removeAt(index);
     });
   }
 
-  Widget _buildCategoryButton(String category) {
+  // 카테고리 버튼 위젯
+  Widget _CategoryButton(String category) {
     return SizedBox(
       width: 100,
       child: TextButton(
@@ -81,12 +90,11 @@ class _PostEditState extends State<PostEdit> {
     );
   }
 
-  Widget _buildTextFormFieldWithTopBorder({
+  Widget _TextFormField({
     required String hintText,
     required ValueChanged<String> onChanged,
     TextInputType keyboardType = TextInputType.text,
     TextStyle? style,
-    bool isTitle = false,
     int minLines = 1,
     int maxLines = 1,
     EdgeInsetsGeometry contentPadding =
@@ -95,7 +103,7 @@ class _PostEditState extends State<PostEdit> {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: Color(0xFFB0B0B0), width: 1.0), // 상단 보더 추가
+          top: BorderSide(color: Color(0xFFB0B0B0), width: 1.0),
         ),
       ),
       child: TextFormField(
@@ -103,8 +111,8 @@ class _PostEditState extends State<PostEdit> {
           hintText: hintText,
           hintStyle: style,
           contentPadding: contentPadding,
-          border: InputBorder.none,
-          enabledBorder: InputBorder.none, // 기본 보더 제거
+          border: InputBorder.none, // 기본 보더 제거
+          enabledBorder: InputBorder.none, // 포커스 안된 상태 보더 제거
           focusedBorder: InputBorder.none, // 포커스 시 보더 제거
         ),
         style: style,
@@ -116,12 +124,11 @@ class _PostEditState extends State<PostEdit> {
     );
   }
 
-  Widget _buildTextFormFieldWithoutTopBorder({
+  Widget _TextFormFieldWithBottomBorder({
     required String hintText,
     required ValueChanged<String> onChanged,
     TextInputType keyboardType = TextInputType.text,
     TextStyle? style,
-    bool isTitle = false,
     int minLines = 1,
     int maxLines = 1,
     EdgeInsetsGeometry contentPadding =
@@ -133,6 +140,7 @@ class _PostEditState extends State<PostEdit> {
         hintStyle: style,
         contentPadding: contentPadding,
         border: UnderlineInputBorder(
+          // BottomBorder
           borderSide: BorderSide(color: Color(0xFFB0B0B0)),
         ),
         enabledBorder: UnderlineInputBorder(
@@ -163,9 +171,7 @@ class _PostEditState extends State<PostEdit> {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              // 완료 버튼 클릭 시 처리
-            },
+            onPressed: () {},
             child: Text(
               '완료',
               style: TextStyle(fontFamily: 'MainFont', color: Colors.black),
@@ -183,46 +189,41 @@ class _PostEditState extends State<PostEdit> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Divider(color: Color(0xFFB0B0B0)),
-            SizedBox(height: 8), // 앱바와 버튼 사이의 여백
-
+            SizedBox(height: 8),
             Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildCategoryButton('자식 자랑'),
-                    _buildCategoryButton('육아 꿀팁'),
+                    _CategoryButton('자식 자랑'),
+                    _CategoryButton('육아 꿀팁'),
                   ],
                 ),
                 SizedBox(height: 16),
               ],
             ),
 
-            // 자식의 이름을 입력해달라는 필드
-            _buildTextFormFieldWithTopBorder(
+            _TextFormField(
               hintText: '자식의 이름을 입력해주세요.',
               onChanged: (value) => setState(() => _childName = value),
               style: _textStyle,
             ),
 
-            // 자식의 나이를 입력해달라는 필드
-            _buildTextFormFieldWithTopBorder(
+            _TextFormField(
               hintText: '자식의 나이를 입력해주세요',
               onChanged: (value) => setState(() => _childAge = value),
               keyboardType: TextInputType.number,
               style: _textStyle,
             ),
 
-            // 제목을 입력하세요 필드
-            _buildTextFormFieldWithTopBorder(
+            _TextFormField(
               hintText: '제목을 입력하세요.',
               onChanged: (value) => setState(() => _title = value),
               style: _titleTextStyle,
-              isTitle: true,
             ),
 
-            // 내용을 입력하세요 필드 (위쪽 보더 없음)
-            _buildTextFormFieldWithoutTopBorder(
+            // 위쪽 보더 없음
+            _TextFormFieldWithBottomBorder(
               hintText: '내용을 입력하세요.',
               onChanged: (value) => setState(() => _content = value),
               style: _textStyle,
@@ -231,6 +232,8 @@ class _PostEditState extends State<PostEdit> {
               keyboardType: TextInputType.multiline,
             ),
             SizedBox(height: 16),
+
+            // 이미지 추가 버튼
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -247,31 +250,35 @@ class _PostEditState extends State<PostEdit> {
                       color: Colors.white,
                       iconSize: 24.0,
                       padding: EdgeInsets.all(12.0),
-                      constraints:
-                          BoxConstraints.tightFor(width: 48, height: 48),
+                      constraints: BoxConstraints.tightFor(
+                          width: 48, height: 48), // 너비, 높이 지정
                     ),
                   ),
                 ],
               ),
             ),
             SizedBox(height: 16),
+
             if (_images.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: GridView.builder(
-                  shrinkWrap: true,
+                  // GridView를 통해 사진 여러장 배치 가능
+                  shrinkWrap: true, // 필요 이상의 공간 차지 x
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
+                    //그리드 레이아웃
+                    crossAxisCount: 1, // 1열에 이미지 1장
                     crossAxisSpacing: 4.0,
                     mainAxisSpacing: 4.0,
                   ),
-                  itemCount: _images.length,
+                  itemCount: _images.length, // 그리드에 표시할 이미지 총 수
                   itemBuilder: (context, index) {
                     final image = _images[index];
                     return Stack(
                       children: [
                         Positioned.fill(
                           child: Container(
+                            // 이미지
                             width: 100,
                             height: 100,
                             child: Image.file(
@@ -281,10 +288,12 @@ class _PostEditState extends State<PostEdit> {
                           ),
                         ),
                         Positioned(
+                          //x 아이콘 위치 지정
                           top: 4,
                           right: 4,
                           child: GestureDetector(
-                            onTap: () => _removeImage(index),
+                            // 탭 제스처 감지
+                            onTap: () => _removeImage(index), //삭제
                             child: const Icon(
                               Icons.cancel_rounded,
                               color: Colors.black87,
