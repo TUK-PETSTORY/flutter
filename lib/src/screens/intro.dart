@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../screens/signup.dart';
+import '../controllers/auth_controller.dart';
+import '../screens/comunityMain.dart';
 
 class Intro extends StatelessWidget {
-  const Intro({super.key});
+  Intro({super.key});
+
+  final AuthController authController = Get.put(AuthController());
+  final TextEditingController idController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +22,9 @@ class Intro extends StatelessWidget {
           children: [
             _LogoAndSlogan(),
             const SizedBox(height: 20),
-            _InputFields(),
+            _InputFields(idController, passwordController),
             const SizedBox(height: 20),
-            _ActionButtons(),
+            _ActionButtons(idController, passwordController),
           ],
         ),
       ),
@@ -46,21 +52,27 @@ class Intro extends StatelessWidget {
     );
   }
 
-  Widget _InputFields() {
+  Widget _InputFields(TextEditingController idController,
+      TextEditingController passwordController) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: [
-          _TextField(label: '아이디'),
+          _TextField(label: '아이디', controller: idController),
           const SizedBox(height: 16),
-          _TextField(label: '비밀번호', obscureText: true), // 텍스트 그대로 표시 x
+          _TextField(
+              label: '비밀번호', controller: passwordController, obscureText: true),
         ],
       ),
     );
   }
 
-  Widget _TextField({required String label, bool obscureText = false}) {
+  Widget _TextField(
+      {required String label,
+      required TextEditingController controller,
+      bool obscureText = false}) {
     return TextField(
+      controller: controller,
       obscureText: obscureText,
       style: const TextStyle(
         fontFamily: 'MainFont',
@@ -98,7 +110,8 @@ class Intro extends StatelessWidget {
     );
   }
 
-  Widget _ActionButtons() {
+  Widget _ActionButtons(TextEditingController idController,
+      TextEditingController passwordController) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -106,7 +119,16 @@ class Intro extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                bool success = await authController.userLogin(
+                    idController.text, passwordController.text);
+                if (success) {
+                  Get.to(() => Comunitymain());
+                  print('로그인 성공');
+                } else {
+                  print('로그인 실패');
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xffFF4081),
                 padding: const EdgeInsets.symmetric(vertical: 16),
