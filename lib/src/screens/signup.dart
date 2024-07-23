@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../screens/intro.dart';
+import '../controllers/auth_controller.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -15,13 +17,15 @@ class _SignupState extends State<Signup> {
       TextEditingController();
   final TextEditingController _nicknameController = TextEditingController();
 
+  final AuthController authController = Get.put(AuthController());
+
   String? _errorMessage;
   String? _idErrorMessage;
   String? _passwordErrorMessage;
   String? _confirmPasswordErrorMessage;
   String? _nicknameErrorMessage;
 
-  void _handleSubmit() {
+  void _handleSubmit() async {
     final id = _idController.text;
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
@@ -67,10 +71,17 @@ class _SignupState extends State<Signup> {
       return;
     }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Intro()),
-    );
+    bool success = await authController.userJoin(id, password, nickname);
+    if (success) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Intro()),
+      );
+    } else {
+      setState(() {
+        _errorMessage = '회원가입에 실패했습니다.';
+      });
+    }
   }
 
   @override
@@ -87,6 +98,7 @@ class _SignupState extends State<Signup> {
             _InputFields(),
             const SizedBox(height: 40),
             _Buttons(context),
+            _ErrorMessage(),
           ],
         ),
       ),
@@ -247,6 +259,23 @@ class _SignupState extends State<Signup> {
             fontFamily: 'MainFont',
             fontSize: 18,
             color: textColor,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _ErrorMessage() {
+    return Visibility(
+      visible: _errorMessage != null && _errorMessage!.isNotEmpty,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+        child: Text(
+          _errorMessage ?? '',
+          style: const TextStyle(
+            color: Colors.red,
+            fontSize: 14,
+            fontFamily: 'MainFont',
           ),
         ),
       ),
