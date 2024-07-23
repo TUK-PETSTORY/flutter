@@ -49,7 +49,7 @@ class Signup extends StatelessWidget {
           const SizedBox(height: 35),
           _TextField('비밀번호', obscureText: true),
           const SizedBox(height: 35),
-          _TextField('비밀번호 확인'),
+          _TextField('비밀번호 확인', obscureText: true),
           const SizedBox(height: 35),
           _TextField('닉네임'),
         ],
@@ -102,28 +102,36 @@ class Signup extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _Button('취소', const Color(0xffFF4081), Colors.white, context),
-          _Button('확인', Colors.white, const Color(0xffFF4081), context),
+          _Button('취소', Colors.white, const Color(0xffFF4081), context,
+              const Color(0xffFF4081)),
+          _Button('확인', const Color(0xffFF4081), Colors.white, context,
+              const Color(0xffFFEEEE)),
         ],
       ),
     );
   }
 
-  Widget _Button(String text, Color backgroundColor, Color textColor,
-      BuildContext context) {
+  Widget _Button(
+    String text,
+    Color backgroundColor,
+    Color textColor,
+    BuildContext context,
+    Color overlayColor,
+  ) {
     return SizedBox(
       width: 130,
-      child: ElevatedButton(
+      child: OutlinedButton(
         onPressed: () {
           if (text == '취소') {
             Navigator.pop(context);
           }
         },
-        style: ElevatedButton.styleFrom(
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: const Color(0xffFF4081), width: 2),
           backgroundColor: backgroundColor,
           padding: const EdgeInsets.symmetric(vertical: 16),
           overlayColor: MaterialStateColor.resolveWith(
-            (states) => const Color(0xffFFEEEE),
+            (states) => overlayColor,
           ),
         ),
         child: Text(
