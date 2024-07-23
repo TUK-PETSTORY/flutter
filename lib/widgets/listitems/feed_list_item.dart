@@ -33,29 +33,161 @@ class _FeedListItemState extends State<FeedListItem> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      //프레임 렌더링 후 실행
       _measureText();
     });
   }
 
   void _measureText() {
-    //텍스트 높이 측정, 더보기 상태 설정
     final textPainter = TextPainter(
-      //텍스트 레이아웃 계산
       text: TextSpan(
         text: widget.content,
         style: TextStyle(fontSize: 16, fontFamily: 'MainFont'),
       ),
       maxLines: 2,
-      textDirection: TextDirection.ltr, //텍스트 방향(왼쪽 -> 오른쪽)
-    )..layout(maxWidth: MediaQuery.of(context).size.width - 30); //텍스트 레이아웃 계산
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: MediaQuery.of(context).size.width - 30);
 
     if (textPainter.size.height > 32) {
-      //32px 대략 2줄의 텍스트 높이
       setState(() {
         showMoreButton = true;
       });
     }
+  }
+
+  void _showMoreOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xffFFEEEE),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey.shade300, width: 1),
+                  ),
+                ),
+                child: ListTile(
+                  leading: Icon(Icons.edit, color: Colors.blue),
+                  title: Text('게시물 수정하기',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'MainFont',
+                          fontSize: 18)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    // 게시물 수정 동작을 여기에 추가
+                  },
+                ),
+              ),
+              Container(
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(16),
+                  ),
+                ),
+                child: ListTile(
+                  leading: Icon(Icons.delete, color: Colors.red),
+                  title: Text('게시물 삭제하기',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'MainFont',
+                          fontSize: 18)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: const Text(
+                            '게시글이 삭제됩니다. \n 정말 삭제하시겠습니까?',
+                            style: TextStyle(
+                              fontFamily: 'MainFont',
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context); // 다이얼로그 닫기
+                              },
+                              child: const Text(
+                                '취소',
+                                style: TextStyle(
+                                    fontFamily: 'MainFont',
+                                    fontSize: 18,
+                                    color: Colors.black),
+                              ),
+                              style: TextButton.styleFrom(
+                                overlayColor: MaterialStateColor.resolveWith(
+                                  (states) => Color(0xffFF4081),
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // 삭제 동작 추가
+                                Navigator.pop(context); // 다이얼로그 닫기
+                              },
+                              child: const Text(
+                                '삭제',
+                                style: TextStyle(
+                                    fontFamily: 'MainFont',
+                                    fontSize: 18,
+                                    color: Color(0xffFF4081)),
+                              ),
+                              style: TextButton.styleFrom(
+                                overlayColor: MaterialStateColor.resolveWith(
+                                  (states) => Color(0xffFF4081),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 16), // 취소 버튼과의 간격
+              Container(
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16), // 네 방향 모두 둥글게
+                ),
+                child: ListTile(
+                  leading: Icon(Icons.cancel, color: Colors.grey),
+                  title: Text('취소',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'MainFont',
+                          fontSize: 18)),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -65,7 +197,7 @@ class _FeedListItemState extends State<FeedListItem> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(color: Colors.grey.shade300, width: 1),
-        ), //경계선 추가
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,13 +207,11 @@ class _FeedListItemState extends State<FeedListItem> {
             child: Row(
               children: [
                 CircleAvatar(
-                  //유저 프로필
                   radius: 22,
                   backgroundImage: NetworkImage(widget.userProfileUrl),
                 ),
-                SizedBox(width: 8), //요소 사이 간격
+                SizedBox(width: 8),
                 Expanded(
-                  //사용자 이름, 아이콘 가로 정렬
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -96,8 +226,11 @@ class _FeedListItemState extends State<FeedListItem> {
                               fontSize: 18,
                             ),
                           ),
-                          Icon(Icons.more_horiz,
-                              size: 20, color: Colors.grey), //더보기 아이콘
+                          IconButton(
+                            onPressed: _showMoreOptions,
+                            icon: Icon(Icons.more_horiz,
+                                size: 20, color: Colors.grey),
+                          ),
                         ],
                       ),
                       Text(
@@ -114,22 +247,21 @@ class _FeedListItemState extends State<FeedListItem> {
               ],
             ),
           ),
-          SizedBox(height: 5), //요소 사이 간격
+          SizedBox(height: 5),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10), //사진 여백
+            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             child: Image.network(
               widget.imageUrl,
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height: 4), //요소 사이 간격
+          SizedBox(height: 4),
           Container(
             margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  // 제목
                   widget.title,
                   style: TextStyle(
                     fontSize: 20,
@@ -138,7 +270,7 @@ class _FeedListItemState extends State<FeedListItem> {
                     color: Colors.black87,
                   ),
                 ),
-                SizedBox(height: 4), //요소 사이 간격
+                SizedBox(height: 4),
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -149,7 +281,6 @@ class _FeedListItemState extends State<FeedListItem> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        //내용
                         widget.content,
                         style: TextStyle(
                           fontSize: 16,
@@ -172,7 +303,7 @@ class _FeedListItemState extends State<FeedListItem> {
                     ],
                   ),
                 ),
-                SizedBox(height: 4), //요소 사이 간격
+                SizedBox(height: 4),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -182,12 +313,11 @@ class _FeedListItemState extends State<FeedListItem> {
                         fontSize: 16,
                         fontFamily: 'MainFont',
                       ),
-                    ), //작성날짜
+                    ),
                     Row(
-                      //좋아요 아이콘
                       children: [
                         Icon(Icons.thumb_up_off_alt),
-                        SizedBox(width: 4), //요소 사이 간격
+                        SizedBox(width: 4),
                         Text(
                           '${widget.likes}',
                           style: TextStyle(
