@@ -116,6 +116,7 @@ class _FeedListItemState extends State<FeedListItem> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
+                            backgroundColor: Colors.white,
                             content: const Text(
                               '게시글이 삭제됩니다. \n 정말 삭제하시겠습니까?',
                               style: TextStyle(
