@@ -79,17 +79,19 @@ class _FeedListItemState extends State<FeedListItem> {
                     bottom: BorderSide(color: Colors.grey.shade300, width: 1),
                   ),
                 ),
-                child: ListTile(
-                  leading: Icon(Icons.edit, color: Colors.blue),
-                  title: Text('게시물 수정하기',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'MainFont',
-                          fontSize: 18)),
-                  onTap: () {
-                    Navigator.pop(context);
-                    // 게시물 수정 동작을 여기에 추가
-                  },
+                child: Center(
+                  child: ListTile(
+                    leading: Icon(Icons.edit, color: Colors.blue),
+                    title: Text('게시물 수정하기',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'MainFont',
+                            fontSize: 18)),
+                    onTap: () {
+                      Navigator.pop(context);
+                      // 게시물 수정 동작을 여기에 추가
+                    },
+                  ),
                 ),
               ),
               Container(
@@ -100,68 +102,70 @@ class _FeedListItemState extends State<FeedListItem> {
                     bottom: Radius.circular(16),
                   ),
                 ),
-                child: ListTile(
-                  leading: Icon(Icons.delete, color: Colors.red),
-                  title: Text('게시물 삭제하기',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'MainFont',
-                          fontSize: 18)),
-                  onTap: () {
-                    Navigator.pop(context);
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          content: const Text(
-                            '게시글이 삭제됩니다. \n 정말 삭제하시겠습니까?',
-                            style: TextStyle(
-                              fontFamily: 'MainFont',
-                              fontSize: 20,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context); // 다이얼로그 닫기
-                              },
-                              child: const Text(
-                                '취소',
-                                style: TextStyle(
-                                    fontFamily: 'MainFont',
-                                    fontSize: 18,
-                                    color: Colors.black),
+                child: Center(
+                  child: ListTile(
+                    leading: Icon(Icons.delete, color: Colors.red),
+                    title: Text('게시물 삭제하기',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'MainFont',
+                            fontSize: 18)),
+                    onTap: () {
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: const Text(
+                              '게시글이 삭제됩니다. \n 정말 삭제하시겠습니까?',
+                              style: TextStyle(
+                                fontFamily: 'MainFont',
+                                fontSize: 20,
                               ),
-                              style: TextButton.styleFrom(
-                                overlayColor: MaterialStateColor.resolveWith(
-                                  (states) => Color(0xffFF4081),
+                              textAlign: TextAlign.center,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context); // 다이얼로그 닫기
+                                },
+                                child: const Text(
+                                  '취소',
+                                  style: TextStyle(
+                                      fontFamily: 'MainFont',
+                                      fontSize: 18,
+                                      color: Colors.black),
+                                ),
+                                style: TextButton.styleFrom(
+                                  overlayColor: MaterialStateColor.resolveWith(
+                                    (states) => Color(0xffFF4081),
+                                  ),
                                 ),
                               ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                // 삭제 동작 추가
-                                Navigator.pop(context); // 다이얼로그 닫기
-                              },
-                              child: const Text(
-                                '삭제',
-                                style: TextStyle(
-                                    fontFamily: 'MainFont',
-                                    fontSize: 18,
-                                    color: Color(0xffFF4081)),
-                              ),
-                              style: TextButton.styleFrom(
-                                overlayColor: MaterialStateColor.resolveWith(
-                                  (states) => Color(0xffFF4081),
+                              TextButton(
+                                onPressed: () {
+                                  // 삭제 동작 추가
+                                  Navigator.pop(context); // 다이얼로그 닫기
+                                },
+                                child: const Text(
+                                  '삭제',
+                                  style: TextStyle(
+                                      fontFamily: 'MainFont',
+                                      fontSize: 18,
+                                      color: Color(0xffFF4081)),
+                                ),
+                                style: TextButton.styleFrom(
+                                  overlayColor: MaterialStateColor.resolveWith(
+                                    (states) => Color(0xffFF4081),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
               SizedBox(height: 16), // 취소 버튼과의 간격
@@ -171,16 +175,18 @@ class _FeedListItemState extends State<FeedListItem> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16), // 네 방향 모두 둥글게
                 ),
-                child: ListTile(
-                  leading: Icon(Icons.cancel, color: Colors.grey),
-                  title: Text('취소',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'MainFont',
-                          fontSize: 18)),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                child: Center(
+                  child: ListTile(
+                    leading: Icon(Icons.cancel, color: Colors.grey),
+                    title: Text('취소',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'MainFont',
+                            fontSize: 18)),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
               ),
             ],
