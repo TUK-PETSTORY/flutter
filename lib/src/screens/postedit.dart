@@ -115,7 +115,7 @@ class _PostEditState extends State<PostEdit> {
           enabledBorder: InputBorder.none, // 포커스 안된 상태 보더 제거
           focusedBorder: InputBorder.none, // 포커스 시 보더 제거
         ),
-        style: style,
+        style: style?.copyWith(color: Colors.black),
         onChanged: onChanged,
         keyboardType: keyboardType,
         minLines: minLines,
@@ -150,7 +150,7 @@ class _PostEditState extends State<PostEdit> {
           borderSide: BorderSide(color: Color(0xFFB0B0B0)),
         ),
       ),
-      style: style,
+      style: style?.copyWith(color: Colors.black),
       onChanged: onChanged,
       keyboardType: keyboardType,
       minLines: minLines,
@@ -228,7 +228,7 @@ class _PostEditState extends State<PostEdit> {
               onChanged: (value) => setState(() => _content = value),
               style: _textStyle,
               minLines: 8,
-              maxLines: 1000,
+              maxLines: 10,
               keyboardType: TextInputType.multiline,
             ),
             SizedBox(height: 16),
