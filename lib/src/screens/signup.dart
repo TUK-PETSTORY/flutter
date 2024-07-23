@@ -16,15 +16,54 @@ class _SignupState extends State<Signup> {
   final TextEditingController _nicknameController = TextEditingController();
 
   String? _errorMessage;
+  String? _idErrorMessage;
+  String? _passwordErrorMessage;
+  String? _confirmPasswordErrorMessage;
+  String? _nicknameErrorMessage;
 
   void _handleSubmit() {
+    final id = _idController.text;
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
+    final nickname = _nicknameController.text;
 
-    if (password != confirmPassword) {
-      setState(() {
-        _errorMessage = '비밀번호가 일치하지 않습니다.';
-      });
+    // 초기화
+    _errorMessage = null;
+    _idErrorMessage = null;
+    _passwordErrorMessage = null;
+    _confirmPasswordErrorMessage = null;
+    _nicknameErrorMessage = null;
+
+    bool hasError = false;
+
+    if (id.isEmpty) {
+      _idErrorMessage = '아이디를 입력해 주세요.';
+      hasError = true;
+    }
+
+    if (password.isEmpty) {
+      _passwordErrorMessage = '비밀번호를 입력해 주세요.';
+      hasError = true;
+    }
+
+    if (nickname.isEmpty) {
+      _nicknameErrorMessage = '닉네임을 입력해 주세요.';
+      hasError = true;
+    }
+
+    if (confirmPassword.isEmpty || password != confirmPassword) {
+      _confirmPasswordErrorMessage = '비밀번호가 일치하지 않습니다.';
+      hasError = true;
+    }
+
+    if (password.isNotEmpty &&
+        confirmPassword.isNotEmpty &&
+        password == confirmPassword) {
+      _confirmPasswordErrorMessage = null;
+    }
+
+    if (hasError) {
+      setState(() {});
       return;
     }
 
@@ -75,81 +114,89 @@ class _SignupState extends State<Signup> {
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
         children: [
-          _TextField('아이디', controller: _idController),
-          const SizedBox(height: 45),
-          _TextField('비밀번호',
-              controller: _passwordController, obscureText: true),
-          const SizedBox(height: 45),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _TextField('비밀번호 확인',
-                  controller: _confirmPasswordController, obscureText: true),
-              // Visibility 위젯을 사용하여 오류 메시지 제어
-              SizedBox(
-                height: 25,
-                child: Visibility(
-                  visible: _errorMessage != null,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      _errorMessage ?? '',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 14,
-                        fontFamily: 'MainFont',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          _TextField('아이디',
+              controller: _idController, errorMessage: _idErrorMessage),
           const SizedBox(height: 20),
-          _TextField('닉네임', controller: _nicknameController),
+          _TextField('비밀번호',
+              controller: _passwordController,
+              obscureText: true,
+              errorMessage: _passwordErrorMessage),
+          const SizedBox(height: 20),
+          _TextField('비밀번호 확인',
+              controller: _confirmPasswordController,
+              obscureText: true,
+              errorMessage: _confirmPasswordErrorMessage),
+          const SizedBox(height: 20),
+          _TextField('닉네임',
+              controller: _nicknameController,
+              errorMessage: _nicknameErrorMessage),
         ],
       ),
     );
   }
 
   Widget _TextField(String label,
-      {bool obscureText = false, required TextEditingController controller}) {
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      style: const TextStyle(
-        fontFamily: 'MainFont',
-        fontSize: 18,
-      ),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(
-          fontFamily: 'MainFont',
-          fontSize: 18,
-          color: Color(0xff828282),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide(
-            color: const Color(0xffFF4081),
-            width: 1,
+      {bool obscureText = false,
+      required TextEditingController controller,
+      String? errorMessage}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: controller,
+          obscureText: obscureText,
+          style: const TextStyle(
+            fontFamily: 'MainFont',
+            fontSize: 18,
+          ),
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(
+              fontFamily: 'MainFont',
+              fontSize: 18,
+              color: Color(0xff828282),
+            ),
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(
+                color: const Color(0xffFF4081),
+                width: 1,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(
+                color: const Color(0xffFF4081),
+                width: 2,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
           ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide(
-            color: const Color(0xffFF4081),
-            width: 2,
+        SizedBox(
+          height: 25, // 오류 메시지의 공간을 예약합니다.
+          child: Visibility(
+            visible: errorMessage != null && errorMessage.isNotEmpty,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                errorMessage ?? '',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 14,
+                  fontFamily: 'MainFont',
+                ),
+              ),
+            ),
           ),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-      ),
+      ],
     );
   }
 
