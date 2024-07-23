@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'mypage/index.dart';
 import 'comunityMain.dart';
 import 'shop/index.dart';
 
@@ -21,7 +22,7 @@ class _HomeState extends State<Home> {
   final List<Widget> _navbarViews = [
     ShopIndex(),
     Comunitymain(),
-    Center(child: Text('마이페이지', style: TextStyle(fontFamily: 'MainFont'))),
+    MyPageIndex(),
   ];
 
   void _onItemTapped(int index) {
