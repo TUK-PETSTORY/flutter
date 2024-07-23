@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MyPostListItem extends StatelessWidget {
+class MyPostListItem extends StatefulWidget {
   final String title;
   final String content;
   final String imageUrl;
@@ -12,6 +12,154 @@ class MyPostListItem extends StatelessWidget {
     required this.imageUrl,
     required this.category,
   });
+
+  @override
+  _MyPostListItemState createState() => _MyPostListItemState();
+}
+
+class _MyPostListItemState extends State<MyPostListItem> {
+  void _showMoreOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xffFFEEEE),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey.shade300, width: 1),
+                  ),
+                ),
+                child: Center(
+                  child: ListTile(
+                    leading: Icon(Icons.edit, color: Colors.blue),
+                    title: Text('게시물 수정하기',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'MainFont',
+                            fontSize: 18)),
+                    onTap: () {
+                      Navigator.pop(context);
+                      // 게시물 수정 동작을 여기에 추가
+                    },
+                  ),
+                ),
+              ),
+              Container(
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(16),
+                  ),
+                ),
+                child: Center(
+                  child: ListTile(
+                    leading: Icon(Icons.delete, color: Colors.red),
+                    title: Text('게시물 삭제하기',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'MainFont',
+                            fontSize: 18)),
+                    onTap: () {
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.white,
+                            content: const Text(
+                              '게시글이 삭제됩니다. \n 정말 삭제하시겠습니까?',
+                              style: TextStyle(
+                                fontFamily: 'MainFont',
+                                fontSize: 20,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context); // 다이얼로그 닫기
+                                },
+                                child: const Text(
+                                  '취소',
+                                  style: TextStyle(
+                                      fontFamily: 'MainFont',
+                                      fontSize: 18,
+                                      color: Colors.black),
+                                ),
+                                style: TextButton.styleFrom(
+                                  overlayColor: MaterialStateColor.resolveWith(
+                                    (states) => Color(0xffFF4081),
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // 삭제 동작 추가
+                                  Navigator.pop(context); // 다이얼로그 닫기
+                                },
+                                child: const Text(
+                                  '삭제',
+                                  style: TextStyle(
+                                      fontFamily: 'MainFont',
+                                      fontSize: 18,
+                                      color: Color(0xffFF4081)),
+                                ),
+                                style: TextButton.styleFrom(
+                                  overlayColor: MaterialStateColor.resolveWith(
+                                    (states) => Color(0xffFF4081),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(height: 16), // 취소 버튼과의 간격
+              Container(
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16), // 네 방향 모두 둥글게
+                ),
+                child: Center(
+                  child: ListTile(
+                    leading: Icon(Icons.cancel, color: Colors.grey),
+                    title: Text('취소',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'MainFont',
+                            fontSize: 18)),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +185,7 @@ class MyPostListItem extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
-                    image: NetworkImage(imageUrl),
+                    image: NetworkImage(widget.imageUrl),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -51,7 +199,7 @@ class MyPostListItem extends StatelessWidget {
                     SizedBox(height: 10),
                     // 제목
                     Text(
-                      title,
+                      widget.title,
                       style: TextStyle(
                         fontFamily: 'MainFont',
                         fontWeight: FontWeight.bold,
@@ -61,7 +209,7 @@ class MyPostListItem extends StatelessWidget {
                     SizedBox(height: 15),
                     // 내용
                     Text(
-                      content,
+                      widget.content,
                       maxLines: 1, // 최대 1줄로 설정
                       overflow: TextOverflow.ellipsis, // 넘칠 경우 말 줄임표(...) 표시
                       style: TextStyle(
@@ -82,9 +230,7 @@ class MyPostListItem extends StatelessWidget {
                     // 더보기 아이콘
                     IconButton(
                       icon: Icon(Icons.more_horiz),
-                      onPressed: () {
-                        // 더보기 아이콘 클릭 시 동작
-                      },
+                      onPressed: _showMoreOptions,
                     ),
                     SizedBox(height: 15),
                     // 카테고리 태그
@@ -100,7 +246,7 @@ class MyPostListItem extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          category,
+                          widget.category,
                           style: TextStyle(
                             fontFamily: 'MainFont',
                             color: Colors.white,
