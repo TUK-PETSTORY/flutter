@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => Intro(),
         '/home': (context) => Home(),
       },
-      initialRoute: '/home',
+      initialRoute: '/',
     );
   }
 }
