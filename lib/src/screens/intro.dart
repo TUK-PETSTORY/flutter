@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:front/src/screens/home.dart';
 import 'package:get/get.dart';
 import '../screens/signup.dart';
 import '../controllers/auth_controller.dart';
-import '../screens/comunityMain.dart';
 
 class Intro extends StatelessWidget {
   Intro({super.key});
@@ -123,7 +123,7 @@ class Intro extends StatelessWidget {
                 bool success = await authController.userLogin(
                     idController.text, passwordController.text);
                 if (success) {
-                  Get.to(() => Comunitymain());
+                  Get.to(() => Home());
                   print('로그인 성공');
                 } else {
                   print('로그인 실패');

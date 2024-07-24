@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class MyPostListItem extends StatefulWidget {
   final String title;
   final String content;
-  final String imageUrl;
+  final String imgUrl; // imageUrl을 imgUrl로 수정
   final String category;
 
   MyPostListItem({
     required this.title,
     required this.content,
-    required this.imageUrl,
+    required this.imgUrl, // imageUrl을 imgUrl로 수정
     required this.category,
   });
 
@@ -185,7 +185,7 @@ class _MyPostListItemState extends State<MyPostListItem> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
-                    image: NetworkImage(widget.imageUrl),
+                    image: NetworkImage(widget.imgUrl), // imageUrl을 imgUrl로 수정
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -263,10 +263,9 @@ class _MyPostListItemState extends State<MyPostListItem> {
           // 밑줄 추가
           Container(
             width: double.infinity,
-            child: Divider(
-              color: Colors.grey[300],
-              thickness: 1,
-            ),
+            height: 1,
+            color: Colors.grey[300],
+            margin: EdgeInsets.symmetric(vertical: 10),
           ),
         ],
       ),
