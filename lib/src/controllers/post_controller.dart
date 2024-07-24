@@ -88,4 +88,22 @@ class PostController extends GetxController {
         snackPosition: SnackPosition.BOTTOM);
     return false;
   }
+
+  Future<void> fetchUserPosts() async {
+    try {
+      final Map<String, dynamic> body = await postProvider.fetchUserPosts();
+
+      if (body['success'] == true) {
+        List<Map<String, dynamic>> posts = List<Map<String, dynamic>>.from(body['userPosts']);
+        postList.value = posts;
+      } else {
+        Get.snackbar("게시글 조회 에러", body['message'] ?? "Unknown error",
+            snackPosition: SnackPosition.BOTTOM);
+      }
+    } catch (e) {
+      Get.snackbar("게시글 조회 에러", "데이터를 가져오는 데 실패했습니다.",
+          snackPosition: SnackPosition.BOTTOM);
+      log("Error: $e"); // 예외 로그 출력
+    }
+  }
 }
