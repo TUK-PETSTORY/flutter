@@ -182,13 +182,16 @@ class _PostEditState extends State<PostEdit> {
         actions: [
           TextButton(
             onPressed: () async {
+              // _selectedCategory가 null인 경우 widget.category로 설정
+              _selectedCategory ??= widget.category;
+
               bool success = await postController.postWrite(
                 _title,
                 _content,
-                1, // fileId
-                'imgId', // imgUrl
-                widget.userId,
-                _selectedCategory ?? widget.category,
+                1, // 실제 파일 업로드 후 fileId 값으로 대체 필요
+                'imgId', // 실제 업로드된 이미지 URL로 대체 필요
+                1,
+                _selectedCategory!,
                 _childName,
                 int.tryParse(_childAge) ?? 0,
               );
