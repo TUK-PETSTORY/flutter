@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:front/src/screens/editpost.dart';
 import 'package:get/get.dart'; // GetX 패키지 import
 import '../../src/controllers/post_controller.dart';
 
 class FeedListItem extends StatefulWidget {
+  final String category;
   final int userId;
   final String userName;
   final String userProfileUrl;
@@ -14,6 +16,7 @@ class FeedListItem extends StatefulWidget {
   final int postId; // 추가된 부분
 
   FeedListItem({
+    required this.category,
     required this.userId,
     required this.userName,
     required this.userProfileUrl,
@@ -95,6 +98,8 @@ class _FeedListItemState extends State<FeedListItem> {
                     onTap: () {
                       Navigator.pop(context);
                       // 게시물 수정 동작을 여기에 추가
+                      Get.to(() => EditPost(
+                          category: widget.category, userId: widget.userId));
                     },
                   ),
                 ),

@@ -49,6 +49,7 @@ class _ChildboastState extends State<Childboast> {
                 }
               },
               child: FeedListItem(
+                category: '자식 자랑',
                 userId: post['user']?['id'] ?? 0,
                 postId: post['id'] ?? 0,
                 userName: post['user']?['name'] ?? '유저',

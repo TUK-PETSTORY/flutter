@@ -14,6 +14,7 @@ class _ChildcareTipsState extends State<ChildcareTips> {
         itemCount: 3,
         itemBuilder: (BuildContext context, int index) {
           return FeedListItem(
+            category: '육아꿀팁',
             userId: 1,
             userName: '신짱구',
             userProfileUrl:
