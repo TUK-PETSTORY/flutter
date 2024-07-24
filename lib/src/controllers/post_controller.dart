@@ -84,17 +84,26 @@ class PostController extends GetxController {
       String category,
       String petName,
       int petAge) async {
-    Map body = await postProvider.postUpdate(
-        id, title, content, fileId, imgUrl, userId, category, petName, petAge);
-    if (body['success'] == true) {
-      Map post = body['post'];
-      log("Post: ${post.toString()}");
-      fetchPosts(category);
-      return post;
+    try {
+      final Map body = await postProvider.postUpdate(id, title, content, fileId,
+          imgUrl, userId, category, petName, petAge);
+
+      if (body['success'] == true) {
+        Map<String, dynamic> post = body['post'];
+        log("Post: ${post.toString()}");
+        fetchPosts(category);
+        return body; // 성공 시 전체 응답 반환
+      } else {
+        Get.snackbar(
+          "게시글 수정 에러",
+          body['message'] ?? "알 수 없는 오류 발생",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
+      print('Error in postUpdate: $e');
     }
-    Get.snackbar("게시글 수정 에러", body['message'],
-        snackPosition: SnackPosition.BOTTOM);
-    return null;
+    return null; // 실패 시 null 반환
   }
 
   Future<bool> postDelete(int id) async {
