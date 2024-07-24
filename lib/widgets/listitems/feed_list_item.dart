@@ -8,19 +8,21 @@ class FeedListItem extends StatefulWidget {
   final int userId;
   final String userName;
   final String userProfileUrl;
-  final String subtitle;
+  final String childName; // 자식 이름
+  final int childAge; // 자식 나이
   final String imageUrl;
   final String title;
   final String content;
   final String date;
-  final int postId; // 추가된 부분
+  final int postId;
 
   FeedListItem({
     required this.category,
     required this.userId,
     required this.userName,
     required this.userProfileUrl,
-    required this.subtitle,
+    required this.childName,
+    required this.childAge,
     required this.imageUrl,
     required this.title,
     required this.content,
@@ -99,7 +101,15 @@ class _FeedListItemState extends State<FeedListItem> {
                       Navigator.pop(context);
                       // 게시물 수정 동작을 여기에 추가
                       Get.to(() => EditPost(
-                          category: widget.category, userId: widget.userId));
+                            category: widget.category, // 현재 카테고리
+                            userId: widget.userId, // 유저 ID
+                            childName: widget.childName,
+                            childAge: widget.childAge,
+                            title: widget.title, // 게시물 제목
+                            content: widget.content, // 게시물 내용
+                            imageUrl: widget.imageUrl, // 게시물 이미지 URL
+                            postId: widget.postId,
+                          ));
                     },
                   ),
                 ),
@@ -257,7 +267,7 @@ class _FeedListItemState extends State<FeedListItem> {
                         ],
                       ),
                       Text(
-                        widget.subtitle,
+                        '${widget.childName} ${widget.childAge}살',
                         style: TextStyle(
                           fontFamily: 'MainFont',
                           color: Colors.grey[600],
