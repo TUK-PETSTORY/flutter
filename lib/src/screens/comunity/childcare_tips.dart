@@ -23,7 +23,7 @@ class _ChildcareTipsState extends State<ChildcareTips> {
             title: '양치하는 흰둥이',
             content: '흰둥이가 스스로 양치하는 법을 배웠어요!',
             date: '2024년 8월 20일',
-            likes: 15,
+            postId: 1,
           );
         },
       ),

@@ -31,6 +31,7 @@ class _ChildboastState extends State<Childboast> {
           itemBuilder: (BuildContext context, int index) {
             var post = postController.postList[index];
             return FeedListItem(
+              postId: post['id'],
               userName: '유저',
               userProfileUrl: '',
               subtitle: '${post['pet_name']} ${post['pet_age']}살',
@@ -38,7 +39,6 @@ class _ChildboastState extends State<Childboast> {
               title: post['title'] ?? '',
               content: post['content'] ?? '',
               date: post['created_at'] ?? '',
-              likes: 0, // Replace with actual likes if available
             );
           },
         );

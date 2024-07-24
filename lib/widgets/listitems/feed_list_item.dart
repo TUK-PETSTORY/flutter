@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart'; // GetX 패키지 import
+import '../../src/controllers/post_controller.dart';
 
 class FeedListItem extends StatefulWidget {
   final String userName;
@@ -8,7 +10,7 @@ class FeedListItem extends StatefulWidget {
   final String title;
   final String content;
   final String date;
-  final int likes;
+  final int postId; // 추가된 부분
 
   FeedListItem({
     required this.userName,
@@ -18,7 +20,7 @@ class FeedListItem extends StatefulWidget {
     required this.title,
     required this.content,
     required this.date,
-    required this.likes,
+    required this.postId, // 추가된 부분
   });
 
   @override
@@ -28,6 +30,7 @@ class FeedListItem extends StatefulWidget {
 class _FeedListItemState extends State<FeedListItem> {
   bool isExpanded = false;
   bool showMoreButton = false;
+  final PostController postController = Get.find<PostController>(); // 수정된 부분
 
   @override
   void initState() {
@@ -144,9 +147,14 @@ class _FeedListItemState extends State<FeedListItem> {
                                 ),
                               ),
                               TextButton(
-                                onPressed: () {
-                                  // 삭제 동작 추가
-                                  Navigator.pop(context); // 다이얼로그 닫기
+                                onPressed: () async {
+                                  bool success = await postController
+                                      .postDelete(widget.postId);
+                                  if (success) {
+                                    Get.snackbar('게시글 삭제', '게시글이 삭제되었습니다.',
+                                        snackPosition: SnackPosition.BOTTOM);
+                                    Navigator.pop(context); // 다이얼로그 닫기
+                                  }
                                 },
                                 child: const Text(
                                   '삭제',
@@ -314,7 +322,7 @@ class _FeedListItemState extends State<FeedListItem> {
                 ),
                 SizedBox(height: 4),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       widget.date,
@@ -322,18 +330,6 @@ class _FeedListItemState extends State<FeedListItem> {
                         fontSize: 16,
                         fontFamily: 'MainFont',
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Icon(Icons.thumb_up_off_alt),
-                        SizedBox(width: 4),
-                        Text(
-                          '${widget.likes}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),

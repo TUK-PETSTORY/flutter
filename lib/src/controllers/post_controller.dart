@@ -82,7 +82,6 @@ class PostController extends GetxController {
     if (body['success'] == true) {
       String message = body['message'];
       log("message:$message");
-      fetchPosts("");
       return true;
     }
     Get.snackbar('게시글 삭제 에러', body['message'],
