@@ -3,12 +3,12 @@ import 'package:get/get.dart';
 import 'package:front/src/controllers/site_controller.dart';
 import '../../../widgets/listitems/site_list_item.dart';
 
-class ShopShow extends StatelessWidget {
+class ShopFavorite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SiteController siteController = Get.put(SiteController());
 
-    siteController.fetchAllSites();
+    siteController.fetchFavorites();
 
     return Obx(() {
       if (siteController.sites.isEmpty) {

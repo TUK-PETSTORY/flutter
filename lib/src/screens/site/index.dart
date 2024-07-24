@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/src/screens/site/favorite.dart';
 import 'package:front/src/screens/site/show.dart';
 
 final List<Tab> tabs = <Tab>[
@@ -7,8 +8,8 @@ final List<Tab> tabs = <Tab>[
 ];
 
 final List<Widget> tabItems = [
-  ShopShow(),
-  ShopShow(),
+  ShopShow(), // 전체보기
+  ShopFavorite(),  // 즐겨찾기
 ];
 
 class ShopIndex extends StatelessWidget {

@@ -5,4 +5,9 @@ class SiteProvider extends Provider {
     final response = await get('/site/all');
     return response.body;
   }
+
+  Future<Map> shopShowFavorites() async {
+    final response = await get('/like/user');
+    return response.body;
+  }
 }

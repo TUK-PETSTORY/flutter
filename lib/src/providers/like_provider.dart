@@ -14,14 +14,4 @@ class LikeProvider extends Provider {
     final response = await delete('/like/$likeId');
     return response.body;
   }
-
-  Future<Map> countLikesByPostId(int postId) async {
-    final response = await get('/like/count/post/$postId');
-    return response.body;
-  }
-
-  Future<Map> countLikesBySiteId(int siteId) async {
-    final response = await get('/like/count/site/$siteId');
-    return response.body;
-  }
 }
