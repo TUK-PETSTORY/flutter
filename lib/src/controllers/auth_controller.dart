@@ -1,16 +1,19 @@
 import 'package:get/get.dart';
+import 'dart:developer';
 import '../../src/providers/auth_provider.dart';
 import '../../src/shared/Global.dart';
-import 'dart:developer';
+import 'package:get_storage/get_storage.dart';
 
 class AuthController extends GetxController {
   final authProvider = Get.put(AuthProvider());
+  final storage = GetStorage();
 
   Future<bool> userJoin(String accountId, String password, String name) async {
     Map body = await authProvider.userJoin(accountId, password, name);
     if (body['success'] == true) {
       String token = body['access_token'];
       log("token:$token");
+      storage.write('access_token', token);
       Global.accessToken = token;
       return true;
     }
@@ -24,6 +27,7 @@ class AuthController extends GetxController {
     if (body != null && body['success'] == true) {
       String token = body['access_token'];
       log("token:$token");
+      storage.write('access_token', token);
       Global.accessToken = token;
       return true;
     }
@@ -55,4 +59,6 @@ class AuthController extends GetxController {
         snackPosition: SnackPosition.BOTTOM);
     return null;
   }
+
+  String? get accessToken => storage.read('access_token');
 }
