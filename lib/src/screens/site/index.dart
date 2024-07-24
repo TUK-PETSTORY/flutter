@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/src/screens/shop/show.dart';
+import 'package:front/src/screens/site/show.dart';
 
 final List<Tab> tabs = <Tab>[
   Tab(child: Text('전체보기', style: TextStyle(fontFamily: 'MainFont'))),

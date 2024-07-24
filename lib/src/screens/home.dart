@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'mypage/index.dart';
 import 'comunityMain.dart';
-import 'shop/index.dart';
+import 'site/index.dart';
 
 final List<BottomNavigationBarItem> navbar = [
   BottomNavigationBarItem(icon: Icon(Icons.web), label: '추천사이트'),
