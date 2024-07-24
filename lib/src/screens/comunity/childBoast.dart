@@ -11,7 +11,7 @@ class Childboast extends StatefulWidget {
 
 class _ChildboastState extends State<Childboast> {
   final PostController postController = Get.put(PostController());
-  int selectedUserId = 0; // 선택된 사용자 ID를 저장할 변수 추가
+  int selectedUserId = 0; // 선택된 사용자 ID를 저장할 변수
 
   @override
   void initState() {
@@ -24,7 +24,9 @@ class _ChildboastState extends State<Childboast> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
-        if (postController.postList.isEmpty) {
+        if (postController.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        } else if (postController.postList.isEmpty) {
           return Center(child: Text('게시글이 없습니다.'));
         }
 
@@ -32,27 +34,32 @@ class _ChildboastState extends State<Childboast> {
           itemCount: postController.postList.length,
           itemBuilder: (BuildContext context, int index) {
             var post = postController.postList[index];
+
             return GestureDetector(
               onTap: () {
-                // 게시글을 선택했을 때 PostEdit 페이지로 이동
-                setState(() {
-                  selectedUserId = post['user_id']; // 선택된 사용자 ID 업데이트
-                });
-                Get.to(() => PostEdit(
-                      category: '자식 자랑', // 현재 카테고리
-                      userId: selectedUserId, // 선택된 사용자 ID
-                    ));
+                if (post['user'] != null) {
+                  setState(() {
+                    selectedUserId =
+                        post['user']['id'] ?? 0; // null일 경우 기본값 0 설정
+                  });
+                  Get.to(() => PostEdit(
+                        category: '자식 자랑', // 현재 카테고리
+                        userId: selectedUserId, // 선택된 사용자 ID
+                      ));
+                }
               },
               child: FeedListItem(
-                userId: post['user_id'],
-                postId: post['id'],
-                userName: '유저',
-                userProfileUrl: '',
-                subtitle: '${post['pet_name']} ${post['pet_age']}살',
-                imageUrl: post['img_url'] ?? '',
+                userId: post['user']?['id'] ?? 0,
+                postId: post['id'] ?? 0,
+                userName: post['user']?['name'] ?? '유저',
+                userProfileUrl: post['user']?['imgUrl'] ?? '',
+                subtitle:
+                    '${post['petName'] ?? '반려동물'} ${post['petAge'] ?? '0'}살',
+                imageUrl:
+                    post['imgUrl'] ?? 'https://example.com/default_image.jpg',
                 title: post['title'] ?? '',
                 content: post['content'] ?? '',
-                date: post['created_at'] ?? '',
+                date: post['createAt'] ?? '',
               ),
             );
           },

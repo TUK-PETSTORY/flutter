@@ -17,7 +17,7 @@ class PostProvider extends Provider {
   }
 
   Future<Map> postGet(String category) async {
-    final response = await get('/post/category/$category');
+    final response = await get('/post/$category');
     if (response.status.hasError) {
       throw Exception('API 호출 실패: ${response.statusText}');
     }

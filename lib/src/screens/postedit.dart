@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart'; // 권한 처리를 위한 패키지
 import 'package:get/get.dart'; // Get 패키지
-import 'package:path/path.dart'; // 파일 경로를 다루기 위해 import
 
 import '../../src/controllers/post_controller.dart';
 
