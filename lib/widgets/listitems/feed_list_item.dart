@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // GetX 패키지 import
 import '../../src/controllers/post_controller.dart';
+import '../../src/screens/comunityMain.dart';
 
 class FeedListItem extends StatefulWidget {
   final String userName;
@@ -10,7 +11,8 @@ class FeedListItem extends StatefulWidget {
   final String title;
   final String content;
   final String date;
-  final int postId; // 추가된 부분
+  final int postId;
+  final VoidCallback onDelete; // 추가된 부분
 
   FeedListItem({
     required this.userName,
@@ -20,7 +22,8 @@ class FeedListItem extends StatefulWidget {
     required this.title,
     required this.content,
     required this.date,
-    required this.postId, // 추가된 부분
+    required this.postId,
+    required this.onDelete, // 추가된 부분
   });
 
   @override
@@ -30,7 +33,7 @@ class FeedListItem extends StatefulWidget {
 class _FeedListItemState extends State<FeedListItem> {
   bool isExpanded = false;
   bool showMoreButton = false;
-  final PostController postController = Get.find<PostController>(); // 수정된 부분
+  final PostController postController = Get.find<PostController>();
 
   @override
   void initState() {
@@ -154,6 +157,7 @@ class _FeedListItemState extends State<FeedListItem> {
                                     Get.snackbar('게시글 삭제', '게시글이 삭제되었습니다.',
                                         snackPosition: SnackPosition.BOTTOM);
                                     Navigator.pop(context); // 다이얼로그 닫기
+                                    widget.onDelete(); // 콜백 호출
                                   }
                                 },
                                 child: const Text(
