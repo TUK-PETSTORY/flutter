@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'comunity/childBoast.dart';
-import 'comunity/petConnection.dart';
+import 'comunity/pet_connection.dart';
 import 'comunity/childcare_tips.dart';
   
 final List<Tab> tabs = <Tab>[
@@ -12,7 +12,7 @@ final List<Tab> tabs = <Tab>[
 final List<Widget> tabItems = [
   Childboast(),
   ChildcareTips(),
-  Petconnection(),
+  PetConnection(),
 ];
 
 class Comunitymain extends StatelessWidget {
