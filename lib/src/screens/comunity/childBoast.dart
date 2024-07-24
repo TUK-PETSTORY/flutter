@@ -46,7 +46,10 @@ class _ChildboastState extends State<Childboast> {
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.to(() => PostEdit());
+          Get.to(() => PostEdit(
+                category: '자식 자랑', // 현재 카테고리
+                userId: 1, // 현재 사용자 ID
+              ));
         },
         child: Icon(Icons.edit),
         backgroundColor: Color(0xFFFF4081),
