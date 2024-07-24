@@ -255,13 +255,15 @@ class _FeedListItemState extends State<FeedListItem> {
             ),
           ),
           SizedBox(height: 5),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            child: Image.network(
-              widget.imageUrl,
-              fit: BoxFit.cover,
+          // Conditionally render the image based on the presence of the image URL
+          if (widget.imageUrl.isNotEmpty)
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: Image.network(
+                widget.imageUrl,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
           SizedBox(height: 4),
           Container(
             margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
