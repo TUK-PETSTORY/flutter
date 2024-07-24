@@ -9,14 +9,17 @@ class PostController extends GetxController {
   var fetchPostsError = false.obs;
 
   Future<void> fetchPosts(String category) async {
+    isLoading.value = true;
     try {
       Map body = await postProvider.postGet(category);
       log("API Response: ${body.toString()}"); // 응답 로그 출력
 
       if (body['success'] == true) {
-        // 단일 게시글 객체를 리스트로 변환
-        List<Map<String, dynamic>> posts = [body['postList']];
-        postList.value = posts;
+        // 게시글 리스트가 배열 형태로 반환되는지 확인합니다.
+        List<dynamic> posts = body['postList'] ?? [];
+        // 동적 리스트를 맵 리스트로 변환합니다.
+        postList.value =
+            posts.map((post) => post as Map<String, dynamic>).toList();
         log("Post List: ${postList.toString()}");
       } else {
         Get.snackbar("게시글 조회 에러", body['message'] ?? "Unknown error",
@@ -26,6 +29,8 @@ class PostController extends GetxController {
       Get.snackbar("게시글 조회 에러", "데이터를 가져오는 데 실패했습니다.",
           snackPosition: SnackPosition.BOTTOM);
       log("Error: $e"); // 예외 로그 출력
+    } finally {
+      isLoading.value = false;
     }
   }
 
