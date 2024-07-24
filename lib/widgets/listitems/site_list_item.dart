@@ -8,7 +8,6 @@ class ShopListItem extends StatefulWidget {
   final String siteUrl;
   final String imageUrl;
   final String content;
-  final int likes;
   final int siteId;
 
   ShopListItem({
@@ -16,7 +15,6 @@ class ShopListItem extends StatefulWidget {
     required this.siteUrl,
     required this.imageUrl,
     required this.content,
-    required this.likes,
     required this.siteId,
   });
 
@@ -26,21 +24,16 @@ class ShopListItem extends StatefulWidget {
 
 class _ShopListItemState extends State<ShopListItem> {
   bool _isLiked = false;
-  late int _likes;
-  final LikeController likeController = Get.find<LikeController>();
+  final LikeController likeController = Get.put(LikeController());
 
   @override
   void initState() {
     super.initState();
-    _likes = widget.likes;
-    // 초기 상태에서 좋아요를 확인합니다.
-    _isLiked = _likes > 0; // 기본적으로 좋아요가 있으면 true로 설정합니다.
   }
 
   void _toggleLike() async {
     setState(() {
       _isLiked = !_isLiked;
-      _likes = _isLiked ? _likes + 1 : _likes - 1;
     });
 
     // LikeController를 통해 서버에 변경사항을 반영합니다.
@@ -125,11 +118,6 @@ class _ShopListItemState extends State<ShopListItem> {
                                 size: 18,
                               ),
                               onPressed: _toggleLike,
-                            ),
-                            Text(
-                              '$_likes',
-                              style: TextStyle(
-                                  fontFamily: 'MainFont', fontSize: 16),
                             ),
                           ],
                         ),

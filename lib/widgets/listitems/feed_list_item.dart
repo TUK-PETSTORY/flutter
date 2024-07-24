@@ -35,7 +35,7 @@ class _FeedListItemState extends State<FeedListItem> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _measureText();
     });
   }

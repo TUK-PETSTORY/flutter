@@ -24,7 +24,7 @@ class AuthController extends GetxController {
 
   Future<bool> userLogin(String accountId, String password) async {
     Map body = await authProvider.userLogin(accountId, password);
-    if (body != null && body['success'] == true) {
+    if (body['success'] == true) {
       String token = body['access_token'];
       log("token:$token");
       storage.write('access_token', token);
@@ -38,7 +38,7 @@ class AuthController extends GetxController {
 
   Future<Map?> userShow() async {
     Map body = await authProvider.userShow();
-    if (body != null && body['success'] == true) {
+    if (body['success'] == true) {
       Map user = body['user'];
       log("User: ${user.toString()}");
       return user;
@@ -50,7 +50,7 @@ class AuthController extends GetxController {
 
   Future<List<Map>?> getMyPosts() async {
     Map body = await authProvider.getMyPosts();
-    if (body != null && body['success'] == true) {
+    if (body['success'] == true) {
       List<Map> posts = List<Map>.from(body['posts']);
       log("Posts: ${posts.toString()}");
       return posts;
