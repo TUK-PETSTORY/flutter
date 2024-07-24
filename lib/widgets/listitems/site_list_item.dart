@@ -38,7 +38,7 @@ class _ShopListItemState extends State<ShopListItem> {
 
     // LikeController를 통해 서버에 변경사항을 반영합니다.
     if (_isLiked) {
-      await likeController.saveLike(1, 1, widget.siteId); // 예시 userId와 postId를 사용
+      await likeController.saveLike(3, 0, widget.siteId); // 예시 userId와 postId를 사용
     } else {
       await likeController.deleteLike(1); // 예시 userId를 사용
     }

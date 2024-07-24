@@ -51,4 +51,12 @@ class PostProvider extends Provider {
     final response = await delete('/post/$id');
     return response.body;
   }
+
+  Future<Map<String, dynamic>> fetchUserPosts() async {
+    final response = await get('/post');
+    if (response.status.hasError) {
+      throw Exception('API 호출 실패: ${response.statusText}');
+    }
+    return response.body;
+  }
 }

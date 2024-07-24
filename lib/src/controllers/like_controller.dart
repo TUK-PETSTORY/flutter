@@ -19,26 +19,4 @@ class LikeController extends GetxController {
       log("Like deleted successfully");
     }
   }
-
-  Future<void> countLikesByPostId(int postId) async {
-    Map body = await likeProvider.countLikesByPostId(postId);
-    if (body['success'] == true) {
-      likeCount.value = body['count'];
-      log("Like count for postId $postId: ${likeCount.value}");
-    } else {
-      Get.snackbar("좋아요 에러", body['message'],
-          snackPosition: SnackPosition.BOTTOM);
-    }
-  }
-
-  Future<void> countLikesBySiteId(int siteId) async {
-    Map body = await likeProvider.countLikesBySiteId(siteId);
-    if (body['success'] == true) {
-      likeCount.value = body['count'];
-      log("Like count for siteId $siteId: ${likeCount.value}");
-    } else {
-      Get.snackbar("좋아요 에러", body['message'],
-          snackPosition: SnackPosition.BOTTOM);
-    }
-  }
 }
