@@ -29,10 +29,17 @@ class PostController extends GetxController {
     }
   }
 
-  Future<bool> postWrite(String title, String content, int fileId, String imgId,
-      int userId, String category, String petName, int petAge) async {
+  Future<bool> postWrite(
+      String title,
+      String content,
+      int fileId,
+      String imgUrl,
+      int userId,
+      String category,
+      String petName,
+      int petAge) async {
     Map body = await postProvider.postWrite(
-        title, content, fileId, imgId, userId, category, petName, petAge);
+        title, content, fileId, imgUrl, userId, category, petName, petAge);
     if (body['success'] == true) {
       String message = body['message'];
       log("message:$message");

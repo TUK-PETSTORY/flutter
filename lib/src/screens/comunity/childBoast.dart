@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../widgets/listitems/feed_list_item.dart';
@@ -20,6 +21,8 @@ class _ChildboastState extends State<Childboast> {
 
   @override
   Widget build(BuildContext context) {
+    final int userId = 1; // 예시 유저 아이디, 실제 유저 아이디로 변경 필요
+
     return Scaffold(
       body: Obx(() {
         if (postController.postList.isEmpty) {
@@ -39,13 +42,21 @@ class _ChildboastState extends State<Childboast> {
               title: post['title'] ?? '',
               content: post['content'] ?? '',
               date: post['created_at'] ?? '',
+              onDelete: () {
+                setState(() {
+                  postController.postList.removeAt(index);
+                });
+              },
             );
           },
         );
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.to(() => PostEdit());
+          Get.to(() => PostEdit(
+                category: '자식자랑',
+                userId: userId,
+              ));
         },
         child: Icon(Icons.edit),
         backgroundColor: Color(0xFFFF4081),
