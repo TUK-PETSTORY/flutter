@@ -8,7 +8,8 @@ class Provider extends GetConnect {
     httpClient.baseUrl = 'http://localhost:3000';
     httpClient.addRequestModifier<void>((request) {
       request.headers['Accept'] = 'application/json';
-      if (request.url.toString().contains('/api/')) {
+      if (!request.url.toString().contains('/login') ||
+          request.url.toString().contains('/join')) {
         request.headers['Authorization'] = 'Bearer ${Global.accessToken}';
       }
       return request;
