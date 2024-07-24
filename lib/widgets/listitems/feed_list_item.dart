@@ -154,6 +154,7 @@ class _FeedListItemState extends State<FeedListItem> {
                                     Get.snackbar('게시글 삭제', '게시글이 삭제되었습니다.',
                                         snackPosition: SnackPosition.BOTTOM);
                                     Navigator.pop(context); // 다이얼로그 닫기
+                                    postController.fetchPosts('자식 자랑');
                                   }
                                 },
                                 child: const Text(

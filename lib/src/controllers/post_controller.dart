@@ -15,9 +15,7 @@ class PostController extends GetxController {
       log("API Response: ${body.toString()}"); // 응답 로그 출력
 
       if (body['success'] == true) {
-        // 게시글 리스트가 배열 형태로 반환되는지 확인합니다.
         List<dynamic> posts = body['postList'] ?? [];
-        // 동적 리스트를 맵 리스트로 변환합니다.
         postList.value =
             posts.map((post) => post as Map<String, dynamic>).toList();
         log("Post List: ${postList.toString()}");
@@ -83,14 +81,22 @@ class PostController extends GetxController {
   }
 
   Future<bool> postDelete(int id) async {
-    Map body = await postProvider.postDelete(id);
-    if (body['success'] == true) {
-      String message = body['message'];
-      log("message:$message");
-      return true;
+    try {
+      Map body = await postProvider.postDelete(id);
+      log("Post Delete Response: ${body.toString()}"); // 응답 로그 출력
+      if (body['success'] == true) {
+        String message = body['message'];
+        log("message: $message");
+        return true;
+      }
+      Get.snackbar('게시글 삭제 에러', body['message'],
+          snackPosition: SnackPosition.BOTTOM);
+      return false;
+    } catch (e) {
+      log("Error: $e");
+      Get.snackbar('게시글 삭제 에러', '데이터를 삭제하는 데 실패했습니다.',
+          snackPosition: SnackPosition.BOTTOM);
+      return false;
     }
-    Get.snackbar('게시글 삭제 에러', body['message'],
-        snackPosition: SnackPosition.BOTTOM);
-    return false;
   }
 }
