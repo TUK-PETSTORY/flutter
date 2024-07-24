@@ -2,8 +2,17 @@ import 'dart:io'; // File을 사용하기 위해 import
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart'; // 권한 처리를 위한 패키지
+import 'package:get/get.dart'; // Get 패키지
+import 'package:path/path.dart'; // 파일 경로를 다루기 위해 import
+
+import '../../src/controllers/post_controller.dart';
 
 class PostEdit extends StatefulWidget {
+  final String category;
+  final int userId;
+
+  PostEdit({required this.category, required this.userId});
+
   @override
   _PostEditState createState() => _PostEditState();
 }
@@ -160,6 +169,8 @@ class _PostEditState extends State<PostEdit> {
 
   @override
   Widget build(BuildContext context) {
+    final PostController postController = Get.find<PostController>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -171,7 +182,30 @@ class _PostEditState extends State<PostEdit> {
         ),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () async {
+              bool success = await postController.postWrite(
+                _title,
+                _content,
+                1, // fileId
+                'imgId', // imgUrl
+                widget.userId,
+                _selectedCategory ?? widget.category,
+                _childName,
+                int.tryParse(_childAge) ?? 0,
+              );
+
+              if (success) {
+                Get.back(); // 성공 시 이전 페이지로 돌아가기
+              } else {
+                Get.snackbar(
+                  '작성 실패',
+                  '게시글 작성에 실패했습니다. 다시 시도해 주세요.',
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+              }
+            },
             child: Text(
               '완료',
               style: TextStyle(fontFamily: 'MainFont', color: Colors.black),
@@ -202,26 +236,22 @@ class _PostEditState extends State<PostEdit> {
                 SizedBox(height: 16),
               ],
             ),
-
             _TextFormField(
               hintText: '자식의 이름을 입력해주세요.',
               onChanged: (value) => setState(() => _childName = value),
               style: _textStyle,
             ),
-
             _TextFormField(
               hintText: '자식의 나이를 입력해주세요',
               onChanged: (value) => setState(() => _childAge = value),
               keyboardType: TextInputType.number,
               style: _textStyle,
             ),
-
             _TextFormField(
               hintText: '제목을 입력하세요.',
               onChanged: (value) => setState(() => _title = value),
               style: _titleTextStyle,
             ),
-
             // 위쪽 보더 없음
             _TextFormFieldWithBottomBorder(
               hintText: '내용을 입력하세요.',
@@ -232,7 +262,6 @@ class _PostEditState extends State<PostEdit> {
               keyboardType: TextInputType.multiline,
             ),
             SizedBox(height: 16),
-
             // 이미지 추가 버튼
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -258,7 +287,6 @@ class _PostEditState extends State<PostEdit> {
               ),
             ),
             SizedBox(height: 16),
-
             if (_images.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.all(16.0),

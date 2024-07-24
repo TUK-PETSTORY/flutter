@@ -1,17 +1,17 @@
 import '../providers/provider.dart';
 
 class PostProvider extends Provider {
-  Future<Map> postWrite(String title, String content, int fileId, String imgId,
+  Future<Map> postWrite(String title, String content, int fileId, String imgUrl,
       int userId, String category, String petName, int petAge) async {
     final response = await post('/post/write', {
       "title": title,
       "content": content,
-      "file_id": fileId,
-      "image_id": imgId,
-      "user_id": userId,
+      "fileId": fileId,
+      "imgUrl": imgUrl,
+      "userId": userId,
       "category": category,
-      "pet_name": petName,
-      "pet_age": petAge
+      "petName": petName,
+      "petAge": petAge
     });
     return response.body;
   }

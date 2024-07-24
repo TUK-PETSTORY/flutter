@@ -32,19 +32,36 @@ class PostController extends GetxController {
     }
   }
 
-  Future<bool> postWrite(String title, String content, int fileId, String imgId,
-      int userId, String category, String petName, int petAge) async {
-    Map body = await postProvider.postWrite(
-        title, content, fileId, imgId, userId, category, petName, petAge);
-    if (body['success'] == true) {
-      String message = body['message'];
-      log("message:$message");
-      fetchPosts(category);
-      return true;
+  Future<bool> postWrite(
+      String title,
+      String content,
+      int fileId,
+      String imgUrl,
+      int userId,
+      String category,
+      String petName,
+      int petAge) async {
+    try {
+      Map body = await postProvider.postWrite(
+          title, content, fileId, imgUrl, userId, category, petName, petAge);
+      log("Post Write Response: ${body.toString()}");
+
+      if (body['success'] == true) {
+        String message = body['message'];
+        log("message:$message");
+        fetchPosts(category);
+        return true;
+      } else {
+        Get.snackbar('게시글 등록 에러', body['message'],
+            snackPosition: SnackPosition.BOTTOM);
+        return false;
+      }
+    } catch (e) {
+      log("Error: $e");
+      Get.snackbar('게시글 등록 에러', '데이터를 등록하는 데 실패했습니다.',
+          snackPosition: SnackPosition.BOTTOM);
+      return false;
     }
-    Get.snackbar('게시글 등록 에러', body['message'],
-        snackPosition: SnackPosition.BOTTOM);
-    return false;
   }
 
   Future<Map?> postGet(String category) async {
