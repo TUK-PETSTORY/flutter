@@ -3,6 +3,7 @@ import 'package:get/get.dart'; // GetX 패키지 import
 import '../../src/controllers/post_controller.dart';
 
 class FeedListItem extends StatefulWidget {
+  final int userId;
   final String userName;
   final String userProfileUrl;
   final String subtitle;
@@ -13,6 +14,7 @@ class FeedListItem extends StatefulWidget {
   final int postId; // 추가된 부분
 
   FeedListItem({
+    required this.userId,
     required this.userName,
     required this.userProfileUrl,
     required this.subtitle,

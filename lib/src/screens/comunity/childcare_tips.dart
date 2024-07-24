@@ -14,6 +14,7 @@ class _ChildcareTipsState extends State<ChildcareTips> {
         itemCount: 3,
         itemBuilder: (BuildContext context, int index) {
           return FeedListItem(
+            userId: 1,
             userName: '신짱구',
             userProfileUrl:
                 'https://postfiles.pstatic.net/MjAyMDEyMTRfNiAg/MDAxNjA3ODcyODQ0NDg0.ncVxS5toogcj27QiffiL2WsPC6wPcwQrkkjIwSmxXyYg.iHmd_7gpwbIKVN_9lw876SnwK1ySGlO1Ii5QskBEHDsg.JPEG.sosohan_n/2_(5).jpg?type=w2000',
