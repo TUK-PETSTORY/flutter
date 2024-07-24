@@ -15,7 +15,8 @@ class _ChildboastState extends State<Childboast> {
   @override
   void initState() {
     super.initState();
-    postController.fetchPosts('자식자랑');
+    // '자식 자랑' 카테고리로 게시글을 조회합니다.
+    postController.fetchPosts('자식 자랑');
   }
 
   @override
