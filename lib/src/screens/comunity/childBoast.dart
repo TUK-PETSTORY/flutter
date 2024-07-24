@@ -40,19 +40,24 @@ class _ChildboastState extends State<Childboast> {
                 });
                 Get.to(() => PostEdit(
                       category: '자식 자랑', // 현재 카테고리
-                      userId: selectedUserId, // 선택된 사용자 ID
+                      userId: selectedUserId, // 유저 ID
+                      title: '', // 게시물 제목
+                      content: '', // 게시물 내용
+                      imageUrl: '', // 게시물 이미지 URL
                     ));
               },
               child: FeedListItem(
+                category: post['category'],
                 userId: post['user_id'],
-                postId: post['id'],
                 userName: '유저',
                 userProfileUrl: '',
-                subtitle: '${post['pet_name']} ${post['pet_age']}살',
+                childName: post['pet_name'],
+                childAge: post['pet_age'],
                 imageUrl: post['img_url'] ?? '',
                 title: post['title'] ?? '',
                 content: post['content'] ?? '',
                 date: post['created_at'] ?? '',
+                postId: post['id'],
               ),
             );
           },

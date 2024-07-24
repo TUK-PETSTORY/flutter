@@ -14,11 +14,13 @@ class _ChildcareTipsState extends State<ChildcareTips> {
         itemCount: 3,
         itemBuilder: (BuildContext context, int index) {
           return FeedListItem(
+            category: '육아꿀팁',
             userId: 1,
             userName: '신짱구',
             userProfileUrl:
                 'https://postfiles.pstatic.net/MjAyMDEyMTRfNiAg/MDAxNjA3ODcyODQ0NDg0.ncVxS5toogcj27QiffiL2WsPC6wPcwQrkkjIwSmxXyYg.iHmd_7gpwbIKVN_9lw876SnwK1ySGlO1Ii5QskBEHDsg.JPEG.sosohan_n/2_(5).jpg?type=w2000',
-            subtitle: '흰둥이 4살',
+            childName: '흰둥이',
+            childAge: 4,
             imageUrl:
                 'https://postfiles.pstatic.net/MjAyMDEyMTRfMjEy/MDAxNjA3ODcyNDUzNTc4.MRysg8AHZIQFYzmgE83T9TKayvmBM7GrxjJQ7QSdPYEg.rFJiYxyhmNqaLKZCI5wDYCJsF8pco5mNhnDEzLuED40g.JPEG.sosohan_n/24_(12).jpg?type=w773',
             title: '양치하는 흰둥이',

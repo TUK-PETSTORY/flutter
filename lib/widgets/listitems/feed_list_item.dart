@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // GetX 패키지 import
 import '../../src/controllers/post_controller.dart';
+import '../../src/screens/postedit.dart';
 
 class FeedListItem extends StatefulWidget {
+  final String category;
   final int userId;
   final String userName;
   final String userProfileUrl;
-  final String subtitle;
+  final String childName; // 자식 이름
+  final int childAge; // 자식 나이
   final String imageUrl;
   final String title;
   final String content;
@@ -14,10 +17,12 @@ class FeedListItem extends StatefulWidget {
   final int postId; // 추가된 부분
 
   FeedListItem({
+    required this.category,
     required this.userId,
     required this.userName,
     required this.userProfileUrl,
-    required this.subtitle,
+    required this.childName,
+    required this.childAge,
     required this.imageUrl,
     required this.title,
     required this.content,
@@ -94,7 +99,17 @@ class _FeedListItemState extends State<FeedListItem> {
                             fontSize: 18)),
                     onTap: () {
                       Navigator.pop(context);
-                      // 게시물 수정 동작을 여기에 추가
+                      // 게시물 수정 페이지로 이동
+                      Get.to(() => PostEdit(
+                            category: widget.category, // 현재 카테고리
+                            userId: widget.userId, // 유저 ID
+                            childName: widget.childName,
+                            childAge: widget.childAge,
+                            title: widget.title, // 게시물 제목
+                            content: widget.content, // 게시물 내용
+                            imageUrl: widget.imageUrl, // 게시물 이미지 URL
+                            postId: widget.postId,
+                          ));
                     },
                   ),
                 ),
@@ -251,8 +266,9 @@ class _FeedListItemState extends State<FeedListItem> {
                           ),
                         ],
                       ),
+                      // 자식 이름과 나이를 분리해서 표시
                       Text(
-                        widget.subtitle,
+                        '${widget.childName} ${widget.childAge}살',
                         style: TextStyle(
                           fontFamily: 'MainFont',
                           color: Colors.grey[600],
