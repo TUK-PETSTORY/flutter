@@ -17,7 +17,9 @@ class _ChildboastState extends State<Childboast> {
   void initState() {
     super.initState();
     // '자식 자랑' 카테고리로 게시글을 조회합니다.
-    postController.fetchPosts('자식 자랑');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      postController.fetchPosts('자식 자랑');
+    });
   }
 
   @override

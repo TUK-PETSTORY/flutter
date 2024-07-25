@@ -13,7 +13,7 @@ class PostController extends GetxController {
   try {
     // API 호출
     Map body = await postProvider.postGet(category);
-    log("API Response: ${body.toString()}"); // 응답 로그 출력
+    print("API Response: ${body.toString()}"); // 응답 로그 출력
 
     if (body['success'] == true) {
       // 응답에서 postDetailInfo 추출
@@ -40,7 +40,6 @@ class PostController extends GetxController {
         };
       }).toList();
       
-      log("Post List: ${postList.toString()}");
     } else {
       Get.snackbar(
         "게시글 조회 에러", 

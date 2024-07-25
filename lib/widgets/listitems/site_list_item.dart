@@ -9,14 +9,15 @@ class ShopListItem extends StatefulWidget {
   final String imageUrl;
   final String content;
   final int siteId;
+  final bool isLiked;
 
-  ShopListItem({
-    required this.siteName,
-    required this.siteUrl,
-    required this.imageUrl,
-    required this.content,
-    required this.siteId,
-  });
+  ShopListItem(
+      {required this.siteName,
+      required this.siteUrl,
+      required this.imageUrl,
+      required this.content,
+      required this.siteId,
+      required this.isLiked});
 
   @override
   _ShopListItemState createState() => _ShopListItemState();
@@ -29,6 +30,7 @@ class _ShopListItemState extends State<ShopListItem> {
   @override
   void initState() {
     super.initState();
+    _isLiked = widget.isLiked;
   }
 
   void _toggleLike() async {
@@ -36,11 +38,13 @@ class _ShopListItemState extends State<ShopListItem> {
       _isLiked = !_isLiked;
     });
 
-    // LikeController를 통해 서버에 변경사항을 반영합니다.
     if (_isLiked) {
-      await likeController.saveLike(3, 0, widget.siteId); // 예시 userId와 postId를 사용
+      // 즐겨찾기 등록
+      await likeController.saveLike(
+          3, 0, widget.siteId); // 예시 userId와 postId를 사용
     } else {
-      await likeController.deleteLike(1); // 예시 userId를 사용
+      // 즐겨찾기 삭제
+      await likeController.deleteLike(5); // 예시 userId를 사용
     }
   }
 
