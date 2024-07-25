@@ -191,8 +191,8 @@ class _PostEditState extends State<EditPost> {
     _selectedCategory ??= widget.category;
 
     bool success = await postController.postWrite(
-      "수정",
-      "수정",
+      "제목수정",
+      "내용수정",
       1, // 실제 파일 업로드 후 fileId 값으로 대체 필요
       'imgId', // 실제 업로드된 이미지 URL로 대체 필요
       1,
