@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:front/widgets/listitems/petconnection_list_item.dart';
 
-class Petconnection extends StatefulWidget {
+class PetConnection extends StatefulWidget {
   @override
   _PetConnectionState createState() => _PetConnectionState();
 }
 
-class _PetConnectionState extends State<Petconnection> {
+class _PetConnectionState extends State<PetConnection> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
