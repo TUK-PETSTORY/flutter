@@ -188,19 +188,6 @@ class _PostEditState extends State<EditPost> {
   }
 
   void _handlePostUpdate() async {
-    if (_titleController.text.trim().isEmpty ||
-        _contentController.text.trim().isEmpty ||
-        _selectedCategory.isEmpty) {
-      Get.snackbar(
-        '입력 오류',
-        '제목, 내용, 카테고리는 필수 입력값입니다.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
     bool result = await postController.postUpdate(
       widget.postId,
       _titleController.text.trim(),

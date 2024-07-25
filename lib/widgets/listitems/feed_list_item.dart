@@ -279,14 +279,11 @@ class _FeedListItemState extends State<FeedListItem> {
             ),
           ),
           SizedBox(height: 5),
-          // Conditionally render the image based on the presence of the image URL
-          if (widget.imageUrl.isNotEmpty)
+          // Conditionally render the image based on the category
+          if (widget.category == '자식 자랑' && widget.imageUrl.isNotEmpty)
             Container(
               margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              child: Image.network(
-                widget.imageUrl,
-                fit: BoxFit.cover,
-              ),
+              child: Image.asset('assets/images/noah.jpg', fit: BoxFit.cover),
             ),
           SizedBox(height: 4),
           Container(
