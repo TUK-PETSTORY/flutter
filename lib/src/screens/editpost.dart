@@ -1,33 +1,48 @@
-import 'dart:io'; // File을 사용하기 위해 import
+import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart'; // 권한 처리를 위한 패키지
-import 'package:get/get.dart'; // Get 패키지
+import 'package:permission_handler/permission_handler.dart';
+import 'package:get/get.dart';
+import 'package:path/path.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 import '../../src/controllers/post_controller.dart';
 
-class PostEdit extends StatefulWidget {
+class EditPost extends StatefulWidget {
   final String category;
-  final int userId;
+  int userId = 1;
+  final String childName;
+  final int? childAge;
+  final String title;
+  final String content;
+  String imageUrl = 'imgUrl';
+  final int postId;
 
-  PostEdit({required this.category, required this.userId});
+  EditPost({
+    required this.category,
+    required this.childName,
+    required this.childAge,
+    required this.title,
+    required this.content,
+    required this.postId,
+  });
 
   @override
   _PostEditState createState() => _PostEditState();
 }
 
-class _PostEditState extends State<PostEdit> {
-  String? _selectedCategory;
-  String _childName = '';
-  String _childAge = '';
-  String _title = '';
-  String _content = '';
-
-  // 선택된 이미지 파일 리스트
-  final List<File> _images = [];
-
-  // 이미지 피커 인스턴스
+class _PostEditState extends State<EditPost> {
+  final List<File> _images = []; // 선택된 이미지 파일 리스트
   final ImagePicker _picker = ImagePicker();
+
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
+  final TextEditingController _childNameController = TextEditingController();
+  final TextEditingController _childAgeController = TextEditingController();
+
+  String _selectedCategory = '';
 
   final TextStyle _textStyle = TextStyle(
     color: Color(0xFF828282),
@@ -41,16 +56,24 @@ class _PostEditState extends State<PostEdit> {
     fontSize: 20,
   );
 
-  // 이미지 선택 기능
+  late final PostController postController;
+  @override
+  void initState() {
+    super.initState();
+    postController = Get.find<PostController>();
+    _selectedCategory = widget.category;
+    _titleController.text = widget.title;
+    _contentController.text = widget.content;
+    _childNameController.text = widget.childName;
+    _childAgeController.text = widget.childAge?.toString() ?? '';
+  }
+
   Future<void> _pickImages() async {
-    // 사진 권한 요청
     final status = await Permission.photos.request();
     if (status.isGranted) {
-      // 이미지 선택 다이얼로그 표시
       final List<XFile>? pickedFiles = await _picker.pickMultiImage();
       if (pickedFiles != null) {
         setState(() {
-          // 선택된 이미지를 _images 리스트에 추가
           _images.addAll(pickedFiles.map((file) => File(file.path)));
         });
       }
@@ -59,14 +82,12 @@ class _PostEditState extends State<PostEdit> {
     }
   }
 
-  // 이미지 제거 기능
   void _removeImage(int index) {
     setState(() {
       _images.removeAt(index);
     });
   }
 
-  // 카테고리 버튼 위젯
   Widget _CategoryButton(String category) {
     return SizedBox(
       width: 100,
@@ -74,6 +95,7 @@ class _PostEditState extends State<PostEdit> {
         onPressed: () {
           setState(() {
             _selectedCategory = category;
+            log("Selected Category: $_selectedCategory");
           });
         },
         style: ButtonStyle(
@@ -100,7 +122,7 @@ class _PostEditState extends State<PostEdit> {
 
   Widget _TextFormField({
     required String hintText,
-    required ValueChanged<String> onChanged,
+    required TextEditingController controller,
     TextInputType keyboardType = TextInputType.text,
     TextStyle? style,
     int minLines = 1,
@@ -115,16 +137,16 @@ class _PostEditState extends State<PostEdit> {
         ),
       ),
       child: TextFormField(
+        controller: controller,
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: style,
           contentPadding: contentPadding,
-          border: InputBorder.none, // 기본 보더 제거
-          enabledBorder: InputBorder.none, // 포커스 안된 상태 보더 제거
-          focusedBorder: InputBorder.none, // 포커스 시 보더 제거
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
         ),
         style: style?.copyWith(color: Colors.black),
-        onChanged: onChanged,
         keyboardType: keyboardType,
         minLines: minLines,
         maxLines: maxLines,
@@ -134,7 +156,7 @@ class _PostEditState extends State<PostEdit> {
 
   Widget _TextFormFieldWithBottomBorder({
     required String hintText,
-    required ValueChanged<String> onChanged,
+    required TextEditingController controller,
     TextInputType keyboardType = TextInputType.text,
     TextStyle? style,
     int minLines = 1,
@@ -143,12 +165,12 @@ class _PostEditState extends State<PostEdit> {
         const EdgeInsets.symmetric(vertical: 18.0, horizontal: 16.0),
   }) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: style,
         contentPadding: contentPadding,
         border: UnderlineInputBorder(
-          // BottomBorder
           borderSide: BorderSide(color: Color(0xFFB0B0B0)),
         ),
         enabledBorder: UnderlineInputBorder(
@@ -159,11 +181,39 @@ class _PostEditState extends State<PostEdit> {
         ),
       ),
       style: style?.copyWith(color: Colors.black),
-      onChanged: onChanged,
       keyboardType: keyboardType,
       minLines: minLines,
       maxLines: maxLines,
     );
+  }
+
+  void _handlePostUpdate() async {
+    _selectedCategory ??= widget.category;
+
+    bool success = await postController.postWrite(
+      "제목수정",
+      "내용수정",
+      1, // 실제 파일 업로드 후 fileId 값으로 대체 필요
+      'imgId', // 실제 업로드된 이미지 URL로 대체 필요
+      1,
+      _selectedCategory!,
+      "노아",
+      1,
+    );
+    bool success2 = await postController.postDelete(widget.postId);
+    postController.fetchPosts('자식 자랑');
+
+    if (success) {
+      Get.back(); // 성공 시 이전 페이지로 돌아가기
+    } else {
+      Get.snackbar(
+        '작성 실패',
+        '게시글 작성에 실패했습니다. 다시 시도해 주세요.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 
   @override
@@ -181,33 +231,7 @@ class _PostEditState extends State<PostEdit> {
         ),
         actions: [
           TextButton(
-            onPressed: () async {
-              // _selectedCategory가 null인 경우 widget.category로 설정
-              _selectedCategory ??= widget.category;
-
-              bool success = await postController.postWrite(
-                _title,
-                _content,
-                1, // 실제 파일 업로드 후 fileId 값으로 대체 필요
-                'imgId', // 실제 업로드된 이미지 URL로 대체 필요
-                1,
-                _selectedCategory!,
-                _childName,
-                int.tryParse(_childAge) ?? 0,
-              );
-
-              if (success) {
-                Get.back(); // 성공 시 이전 페이지로 돌아가기
-              } else {
-                Get.snackbar(
-                  '작성 실패',
-                  '게시글 작성에 실패했습니다. 다시 시도해 주세요.',
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.red,
-                  colorText: Colors.white,
-                );
-              }
-            },
+            onPressed: _handlePostUpdate,
             child: Text(
               '완료',
               style: TextStyle(fontFamily: 'MainFont', color: Colors.black),
@@ -240,31 +264,29 @@ class _PostEditState extends State<PostEdit> {
             ),
             _TextFormField(
               hintText: '자식의 이름을 입력해주세요.',
-              onChanged: (value) => setState(() => _childName = value),
+              controller: _childNameController,
               style: _textStyle,
             ),
             _TextFormField(
               hintText: '자식의 나이를 입력해주세요',
-              onChanged: (value) => setState(() => _childAge = value),
+              controller: _childAgeController,
               keyboardType: TextInputType.number,
               style: _textStyle,
             ),
             _TextFormField(
               hintText: '제목을 입력하세요.',
-              onChanged: (value) => setState(() => _title = value),
+              controller: _titleController,
               style: _titleTextStyle,
             ),
-            // 위쪽 보더 없음
             _TextFormFieldWithBottomBorder(
               hintText: '내용을 입력하세요.',
-              onChanged: (value) => setState(() => _content = value),
+              controller: _contentController,
               style: _textStyle,
               minLines: 8,
               maxLines: 10,
               keyboardType: TextInputType.multiline,
             ),
             SizedBox(height: 16),
-            // 이미지 추가 버튼
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -289,53 +311,73 @@ class _PostEditState extends State<PostEdit> {
               ),
             ),
             SizedBox(height: 16),
-            if (_images.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GridView.builder(
-                  // GridView를 통해 사진 여러장 배치 가능
-                  shrinkWrap: true, // 필요 이상의 공간 차지 x
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    //그리드 레이아웃
-                    crossAxisCount: 1, // 1열에 이미지 1장
-                    crossAxisSpacing: 4.0,
-                    mainAxisSpacing: 4.0,
+            _images.isNotEmpty
+                ? Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    height: 400, // 높이 조정
+                    child: GridView.builder(
+                      scrollDirection: Axis.vertical,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1,
+                        childAspectRatio: 1, // 정사각형 비율
+                      ),
+                      itemCount: _images.length,
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(bottom: 8),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Color(0xFFB0B0B0)),
+                                borderRadius: BorderRadius.circular(8.0),
+                                image: DecorationImage(
+                                  image: FileImage(_images[index]),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: IconButton(
+                                icon: Icon(Icons.remove_circle,
+                                    color: Colors.red),
+                                onPressed: () => _removeImage(index),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                : Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    height: 400, // 높이 조정
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xFFB0B0B0)),
+                        borderRadius: BorderRadius.circular(8.0),
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/noah.jpg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: IconButton(
+                              icon:
+                                  Icon(Icons.remove_circle, color: Colors.red),
+                              onPressed: () {},
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  itemCount: _images.length, // 그리드에 표시할 이미지 총 수
-                  itemBuilder: (context, index) {
-                    final image = _images[index];
-                    return Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Container(
-                            // 이미지
-                            width: 100,
-                            height: 100,
-                            child: Image.file(
-                              image,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          //x 아이콘 위치 지정
-                          top: 4,
-                          right: 4,
-                          child: GestureDetector(
-                            // 탭 제스처 감지
-                            onTap: () => _removeImage(index), //삭제
-                            child: const Icon(
-                              Icons.cancel_rounded,
-                              color: Colors.black87,
-                              size: 20.0,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
           ],
         ),
       ),

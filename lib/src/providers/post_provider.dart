@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../providers/provider.dart';
 
 class PostProvider extends Provider {
@@ -13,12 +15,19 @@ class PostProvider extends Provider {
       "petName": petName,
       "petAge": petAge
     });
+    log("Post Write API Response: ${response.body.toString()}");
+    if (response.status.hasError) {
+      log("Post Write API Error: ${response.statusText}");
+      throw Exception('API 호출 실패: ${response.statusText}');
+    }
     return response.body;
   }
 
   Future<Map> postGet(String category) async {
     final response = await get('/post/$category');
+    log("Post Get API Response: ${response.body.toString()}");
     if (response.status.hasError) {
+      log("Post Get API Error: ${response.statusText}");
       throw Exception('API 호출 실패: ${response.statusText}');
     }
     return response.body;
@@ -29,7 +38,7 @@ class PostProvider extends Provider {
       String title,
       String content,
       int fileId,
-      String imgId,
+      String imgUrl,
       int userId,
       String category,
       String petName,
@@ -37,24 +46,36 @@ class PostProvider extends Provider {
     final response = await put('/post/$id', {
       "title": title,
       "content": content,
-      "file_id": fileId,
-      "image_id": imgId,
-      "user_id": userId,
+      "fileId": fileId,
+      "imgUrl": imgUrl,
+      "userId": userId,
       "category": category,
-      "pet_name": petName,
-      "pet_age": petAge
+      "petName": petName,
+      "petAge": petAge
     });
+    log("Post Update API Response: ${response.body.toString()}");
+    if (response.status.hasError) {
+      log("Post Update API Error: ${response.statusText}");
+      throw Exception('API 호출 실패: ${response.statusText}');
+    }
     return response.body;
   }
 
   Future<Map> postDelete(int id) async {
     final response = await delete('/post/$id');
+    log("Post Delete API Response: ${response.body.toString()}");
+    if (response.status.hasError) {
+      log("Post Delete API Error: ${response.statusText}");
+      throw Exception('API 호출 실패: ${response.statusText}');
+    }
     return response.body;
   }
 
   Future<Map<String, dynamic>> fetchUserPosts() async {
-    final response = await get('/post');
+    final response = await get('/user/posts');
+    log("Fetch User Posts API Response: ${response.body.toString()}");
     if (response.status.hasError) {
+      log("Fetch User Posts API Error: ${response.statusText}");
       throw Exception('API 호출 실패: ${response.statusText}');
     }
     return response.body;

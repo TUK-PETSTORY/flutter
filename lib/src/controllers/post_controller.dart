@@ -42,23 +42,15 @@ class PostController extends GetxController {
       
     } else {
       Get.snackbar(
-        "게시글 조회 에러", 
-        body['message'] ?? "Unknown error",
+        "게시글 조회 에러",
+        "데이터를 가져오는 데 실패했습니다.",
         snackPosition: SnackPosition.BOTTOM,
       );
+      log("Error: $e"); // 예외 로그 출력
+    } finally {
+      isLoading.value = false;
     }
-  } catch (e) {
-    Get.snackbar(
-      "게시글 조회 에러", 
-      "데이터를 가져오는 데 실패했습니다.",
-      snackPosition: SnackPosition.BOTTOM,
-    );
-    log("Error: $e"); // 예외 로그 출력
-  } finally {
-    isLoading.value = false;
   }
-}
-
 
   Future<bool> postWrite(
       String title,
@@ -70,14 +62,15 @@ class PostController extends GetxController {
       String petName,
       int petAge) async {
     try {
+      log("Post Write Request: title=$title, content=$content, fileId=$fileId, imgUrl=$imgUrl, userId=$userId, category=$category, petName=$petName, petAge=$petAge");
       Map body = await postProvider.postWrite(
           title, content, fileId, imgUrl, userId, category, petName, petAge);
       log("Post Write Response: ${body.toString()}");
 
       if (body['success'] == true) {
         String message = body['message'];
-        log("message:$message");
-        fetchPosts(category);
+        log("message: $message");
+        await fetchPosts(category); // 게시글을 다시 로드하기 위해 await 추가
         return true;
       } else {
         Get.snackbar('게시글 등록 에러', body['message'],
@@ -102,7 +95,7 @@ class PostController extends GetxController {
     return null;
   }
 
-  Future<Map?> postUpdate(
+  Future<bool> postUpdate(
       int id,
       String title,
       String content,
@@ -118,11 +111,11 @@ class PostController extends GetxController {
       Map post = body['post'];
       log("Post: ${post.toString()}");
       fetchPosts(category);
-      return post;
+      return true;
     }
     Get.snackbar("게시글 수정 에러", body['message'],
         snackPosition: SnackPosition.BOTTOM);
-    return null;
+    return false;
   }
 
   Future<bool> postDelete(int id) async {
@@ -150,7 +143,8 @@ class PostController extends GetxController {
       final Map<String, dynamic> body = await postProvider.fetchUserPosts();
 
       if (body['success'] == true) {
-        List<Map<String, dynamic>> posts = List<Map<String, dynamic>>.from(body['userPosts']);
+        List<Map<String, dynamic>> posts =
+            List<Map<String, dynamic>>.from(body['userPosts']);
         postList.value = posts;
       } else {
         Get.snackbar("게시글 조회 에러", body['message'] ?? "Unknown error",

@@ -51,12 +51,13 @@ class _ChildboastState extends State<Childboast> {
                 }
               },
               child: FeedListItem(
+                category: '자식 자랑',
                 userId: post['user']?['id'] ?? 0,
                 postId: post['id'] ?? 0,
                 userName: post['user']?['name'] ?? '유저',
                 userProfileUrl: post['user']?['imgUrl'] ?? '',
-                subtitle:
-                    '${post['petName'] ?? '반려동물'} ${post['petAge'] ?? '0'}살',
+                childName: '${post['petName'] ?? '반려동물'}',
+                childAge: post['petAge'] ?? 0,
                 imageUrl:
                     post['imgUrl'] ?? 'https://example.com/default_image.jpg',
                 title: post['title'] ?? '',

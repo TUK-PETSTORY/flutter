@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:front/src/screens/editpost.dart';
 import 'package:get/get.dart'; // GetX 패키지 import
 import '../../src/controllers/post_controller.dart';
 
 class FeedListItem extends StatefulWidget {
+  final String category;
   final int userId;
   final String userName;
   final String userProfileUrl;
-  final String subtitle;
+  final String childName; // 자식 이름
+  final int childAge; // 자식 나이
   final String imageUrl;
   final String title;
   final String content;
   final String date;
-  final int postId; // 추가된 부분
+  final int postId;
 
   FeedListItem({
+    required this.category,
     required this.userId,
     required this.userName,
     required this.userProfileUrl,
-    required this.subtitle,
+    required this.childName,
+    required this.childAge,
     required this.imageUrl,
     required this.title,
     required this.content,
@@ -95,6 +100,14 @@ class _FeedListItemState extends State<FeedListItem> {
                     onTap: () {
                       Navigator.pop(context);
                       // 게시물 수정 동작을 여기에 추가
+                      Get.to(() => EditPost(
+                            category: widget.category, // 현재 카테고리
+                            childName: widget.childName,
+                            childAge: widget.childAge,
+                            title: widget.title, // 게시물 제목
+                            content: widget.content, // 게시물 내용
+                            postId: widget.postId,
+                          ));
                     },
                   ),
                 ),
@@ -252,7 +265,7 @@ class _FeedListItemState extends State<FeedListItem> {
                         ],
                       ),
                       Text(
-                        widget.subtitle,
+                        '${widget.childName} ${widget.childAge}살',
                         style: TextStyle(
                           fontFamily: 'MainFont',
                           color: Colors.grey[600],
@@ -266,14 +279,11 @@ class _FeedListItemState extends State<FeedListItem> {
             ),
           ),
           SizedBox(height: 5),
-          // Conditionally render the image based on the presence of the image URL
-          if (widget.imageUrl.isNotEmpty)
+          // Conditionally render the image based on the category
+          if (widget.category == '자식 자랑' && widget.imageUrl.isNotEmpty)
             Container(
               margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              child: Image.network(
-                widget.imageUrl,
-                fit: BoxFit.cover,
-              ),
+              child: Image.asset('assets/images/noah.jpg', fit: BoxFit.cover),
             ),
           SizedBox(height: 4),
           Container(
