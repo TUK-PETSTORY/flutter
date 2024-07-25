@@ -38,7 +38,7 @@ class PostProvider extends Provider {
       String title,
       String content,
       int fileId,
-      String imgId,
+      String imgUrl,
       int userId,
       String category,
       String petName,
@@ -46,12 +46,12 @@ class PostProvider extends Provider {
     final response = await put('/post/$id', {
       "title": title,
       "content": content,
-      "file_id": fileId,
-      "image_id": imgId,
-      "user_id": userId,
+      "fileId": fileId,
+      "imgUrl": imgUrl,
+      "userId": userId,
       "category": category,
-      "pet_name": petName,
-      "pet_age": petAge
+      "petName": petName,
+      "petAge": petAge
     });
     log("Post Update API Response: ${response.body.toString()}");
     if (response.status.hasError) {

@@ -1,31 +1,32 @@
-import 'dart:io'; // File을 사용하기 위해 import
+import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart'; // 권한 처리를 위한 패키지
-import 'package:get/get.dart'; // Get 패키지
-import 'package:path/path.dart'; // 파일 경로를 다루기 위해 import
+import 'package:permission_handler/permission_handler.dart';
+import 'package:get/get.dart';
+import 'package:path/path.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 import '../../src/controllers/post_controller.dart';
 
 class EditPost extends StatefulWidget {
   final String category;
-  final int userId;
+  int userId = 1;
   final String childName;
   final int? childAge;
   final String title;
   final String content;
-  final String imageUrl;
-  final int? postId;
+  String imageUrl = 'imgUrl';
+  final int postId;
 
   EditPost({
     required this.category,
-    required this.userId,
-    this.childName = '',
-    this.childAge,
-    this.title = '',
-    this.content = '',
-    this.imageUrl = '',
-    this.postId,
+    required this.childName,
+    required this.childAge,
+    required this.title,
+    required this.content,
+    required this.postId,
   });
 
   @override
@@ -33,11 +34,6 @@ class EditPost extends StatefulWidget {
 }
 
 class _PostEditState extends State<EditPost> {
-  String _selectedCategory = '';
-  String _title = '';
-  String _content = '';
-  String _childName = ''; // 자식 이름
-  String _childAge = ''; // 자식 나이
   final List<File> _images = []; // 선택된 이미지 파일 리스트
   final ImagePicker _picker = ImagePicker();
 
@@ -45,6 +41,8 @@ class _PostEditState extends State<EditPost> {
   final TextEditingController _contentController = TextEditingController();
   final TextEditingController _childNameController = TextEditingController();
   final TextEditingController _childAgeController = TextEditingController();
+
+  String _selectedCategory = '';
 
   final TextStyle _textStyle = TextStyle(
     color: Color(0xFF828282),
@@ -58,25 +56,16 @@ class _PostEditState extends State<EditPost> {
     fontSize: 20,
   );
 
+  late final PostController postController;
   @override
   void initState() {
     super.initState();
-    _title = widget.title;
-    _content = widget.content;
+    postController = Get.find<PostController>();
     _selectedCategory = widget.category;
-
-    // 상태 업데이트
-    setState(() {
-      _titleController.text = _title;
-      _contentController.text = _content;
-      _childNameController.text = widget.childName;
-      _childAgeController.text = widget.childAge?.toString() ?? '';
-    });
-
-    // 이미지 URL이 있는 경우, 해당 이미지를 리스트에 추가
-    if (widget.imageUrl.isNotEmpty) {
-      _images.add(File(widget.imageUrl));
-    }
+    _titleController.text = widget.title;
+    _contentController.text = widget.content;
+    _childNameController.text = widget.childName;
+    _childAgeController.text = widget.childAge?.toString() ?? '';
   }
 
   Future<void> _pickImages() async {
@@ -106,6 +95,7 @@ class _PostEditState extends State<EditPost> {
         onPressed: () {
           setState(() {
             _selectedCategory = category;
+            log("Selected Category: $_selectedCategory");
           });
         },
         style: ButtonStyle(
@@ -197,6 +187,45 @@ class _PostEditState extends State<EditPost> {
     );
   }
 
+  void _handlePostUpdate() async {
+    if (_titleController.text.trim().isEmpty ||
+        _contentController.text.trim().isEmpty ||
+        _selectedCategory.isEmpty) {
+      Get.snackbar(
+        '입력 오류',
+        '제목, 내용, 카테고리는 필수 입력값입니다.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    bool result = await postController.postUpdate(
+      widget.postId,
+      _titleController.text.trim(),
+      _contentController.text.trim(),
+      0,
+      "",
+      1,
+      _selectedCategory,
+      _childNameController.text.trim(),
+      int.tryParse(_childAgeController.text.trim()) ?? 0,
+    );
+
+    if (result) {
+      Get.back(); // 성공 시 이전 페이지로 돌아가기
+    } else {
+      Get.snackbar(
+        '작성 실패',
+        '게시글 수정에 실패했습니다. 다시 시도해 주세요.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final PostController postController = Get.find<PostController>();
@@ -212,31 +241,7 @@ class _PostEditState extends State<EditPost> {
         ),
         actions: [
           TextButton(
-            onPressed: () async {
-              Map? result = await postController.postUpdate(
-                widget.postId ?? 0,
-                _titleController.text.trim(),
-                _contentController.text.trim(),
-                1, // fileId - 실제 값 필요
-                'imgId', // imgUrl - 실제 값 필요
-                widget.userId,
-                _selectedCategory,
-                _childNameController.text.trim(),
-                int.tryParse(_childAgeController.text.trim()) ?? 0,
-              );
-
-              if (result != null && result['success'] == true) {
-                Get.back(); // 성공 시 이전 페이지로 돌아가기
-              } else {
-                Get.snackbar(
-                  '작성 실패',
-                  '게시글 수정에 실패했습니다. 다시 시도해 주세요.',
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.red,
-                  colorText: Colors.white,
-                );
-              }
-            },
+            onPressed: _handlePostUpdate,
             child: Text(
               '완료',
               style: TextStyle(fontFamily: 'MainFont', color: Colors.black),

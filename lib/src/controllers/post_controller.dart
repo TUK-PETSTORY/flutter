@@ -105,27 +105,27 @@ class PostController extends GetxController {
     return null;
   }
 
-  Future<Map?> postUpdate(
+  Future<bool> postUpdate(
       int id,
       String title,
       String content,
       int fileId,
-      String imgId,
+      String imgUrl,
       int userId,
       String category,
       String petName,
       int petAge) async {
     Map body = await postProvider.postUpdate(
-        id, title, content, fileId, imgId, userId, category, petName, petAge);
+        id, title, content, fileId, imgUrl, userId, category, petName, petAge);
     if (body['success'] == true) {
       Map post = body['post'];
       log("Post: ${post.toString()}");
       fetchPosts(category);
-      return post;
+      return true;
     }
     Get.snackbar("게시글 수정 에러", body['message'],
         snackPosition: SnackPosition.BOTTOM);
-    return null;
+    return false;
   }
 
   Future<bool> postDelete(int id) async {

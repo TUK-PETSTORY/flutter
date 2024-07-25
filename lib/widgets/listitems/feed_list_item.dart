@@ -102,12 +102,10 @@ class _FeedListItemState extends State<FeedListItem> {
                       // 게시물 수정 동작을 여기에 추가
                       Get.to(() => EditPost(
                             category: widget.category, // 현재 카테고리
-                            userId: widget.userId, // 유저 ID
                             childName: widget.childName,
                             childAge: widget.childAge,
                             title: widget.title, // 게시물 제목
                             content: widget.content, // 게시물 내용
-                            imageUrl: widget.imageUrl, // 게시물 이미지 URL
                             postId: widget.postId,
                           ));
                     },
