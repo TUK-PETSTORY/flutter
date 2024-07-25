@@ -188,24 +188,27 @@ class _PostEditState extends State<EditPost> {
   }
 
   void _handlePostUpdate() async {
-    bool result = await postController.postUpdate(
-      widget.postId,
-      _titleController.text.trim(),
-      _contentController.text.trim(),
-      0,
-      "",
-      1,
-      _selectedCategory,
-      _childNameController.text.trim(),
-      int.tryParse(_childAgeController.text.trim()) ?? 0,
-    );
+    _selectedCategory ??= widget.category;
 
-    if (result) {
+    bool success = await postController.postWrite(
+      "수정",
+      "수정",
+      1, // 실제 파일 업로드 후 fileId 값으로 대체 필요
+      'imgId', // 실제 업로드된 이미지 URL로 대체 필요
+      1,
+      _selectedCategory!,
+      "노아",
+      1,
+    );
+    bool success2 = await postController.postDelete(widget.postId);
+    postController.fetchPosts('자식 자랑');
+
+    if (success) {
       Get.back(); // 성공 시 이전 페이지로 돌아가기
     } else {
       Get.snackbar(
         '작성 실패',
-        '게시글 수정에 실패했습니다. 다시 시도해 주세요.',
+        '게시글 작성에 실패했습니다. 다시 시도해 주세요.',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
