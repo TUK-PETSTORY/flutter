@@ -347,7 +347,34 @@ class _PostEditState extends State<EditPost> {
                       },
                     ),
                   )
-                : Container(),
+                : Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    height: 400, // 높이 조정
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 8),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xFFB0B0B0)),
+                        borderRadius: BorderRadius.circular(8.0),
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/noah.jpg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: IconButton(
+                              icon:
+                                  Icon(Icons.remove_circle, color: Colors.red),
+                              onPressed: () {},
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
