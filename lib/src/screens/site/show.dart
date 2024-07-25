@@ -23,7 +23,9 @@ class ShopShow extends StatelessWidget {
                 siteName: site['site_name'],
                 siteUrl: site['site_url'],
                 imageUrl: site['img_url'],
-                content: site['content']);
+                content: site['content'],
+                isLiked: false
+            );
           },
         );
       }
